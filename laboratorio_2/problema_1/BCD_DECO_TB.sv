@@ -1,9 +1,9 @@
 module BCD_DECO_TB;
 
-logic[7:0] bcd;
+logic[13:0] catodo;
 logic [3:0] bin;
 
-top UUT(bin,bcd);
+top UUT(bin,catodo);
 
 
 initial
