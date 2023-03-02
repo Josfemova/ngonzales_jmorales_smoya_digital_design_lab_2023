@@ -1,8 +1,8 @@
 module contador_tb();
 	logic clk, reset;
 	
-	logic [6:0] num;
-	logic [6:0] start = 6'b001011;
+	logic [5:0] num;
+	logic [5:0] start = 6'b001011;
 	
 	contador #(6) count_6(.clk(clk),
 						  .reset(reset),
