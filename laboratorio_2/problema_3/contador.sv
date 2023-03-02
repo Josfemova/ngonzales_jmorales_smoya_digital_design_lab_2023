@@ -1,10 +1,11 @@
-module contador (input logic clk, reset, 
-					output reg [5:0] number);
-					
+module contador #(parameter SIZE = 6)(input logic clk, reset,
+												input reg [SIZE-1:0] start,
+												output reg [SIZE-1:0] number);
+	
 	 always @(posedge clk) begin 
-			number <= number + 1;
+			number <= number - 1;
 			if (reset) begin 
-				number <= 0; 
+				number <= start; 
 			end
 	end 
 
