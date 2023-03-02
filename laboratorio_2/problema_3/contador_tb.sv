@@ -10,8 +10,7 @@ module contador_tb();
 	
 	contador #(6) count_6(.clk(clk),
 						  .reset(reset),
-						  .number(num),
-						  .start(start));
+						  .number(num));
 	
 	initial begin 
 		
