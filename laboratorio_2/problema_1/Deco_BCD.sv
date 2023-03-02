@@ -7,7 +7,7 @@ logic [7:0] bcd;
 
 Bin2Bcd deco(bin,bcd);
 
-catodo_control control(bcd[3:0],bcd[7:4],catodo);
+catodo_control control(bcd[3:0],bcd[7:4],~catodo);
 
 
 endmodule
