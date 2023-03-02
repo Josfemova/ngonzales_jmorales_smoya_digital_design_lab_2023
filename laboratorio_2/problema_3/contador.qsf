@@ -67,9 +67,6 @@ set_global_assignment -name EDA_TEST_BENCH_NAME contador_tb -section_id eda_simu
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id contador_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME contador_tb -section_id contador_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE contador_tb.sv -section_id contador_tb
-set_global_assignment -name SYSTEMVERILOG_FILE Deco_BCD.sv
-set_global_assignment -name SYSTEMVERILOG_FILE catodo_control.sv
-set_global_assignment -name SYSTEMVERILOG_FILE Bin_to_BCD.sv
 set_location_assignment PIN_W19 -to number[5]
 set_location_assignment PIN_AA14 -to clk
 set_location_assignment PIN_V16 -to number[0]

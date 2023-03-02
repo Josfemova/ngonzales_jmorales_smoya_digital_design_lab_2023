@@ -20,12 +20,14 @@ module contador_tb();
 	
 	initial begin
 		
-		reset=1;
-		#20;
 		reset=0;
+		#20;
+		reset=1;
+		#100
+		reset = 0;
+		
 		#100
 		reset = 1;
-		
 		#100
 		reset = 0;
 		
