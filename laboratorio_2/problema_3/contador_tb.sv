@@ -1,14 +1,21 @@
 module contador_tb();
-
-	logic clktb, resettb, numbertb;
+	logic clk, reset;
 	
-	contador count(clktb, resettb, numbertb);
+	logic [5:0] num;
 	
-	initial begin
-		clktb = 0;
-		resettb = 0;
-		$monitor("counter: []", numbertb);
-		#1000;
+	contador count_6(.clk(clk),
+						  .reset(reset),
+						  .number(num));
+	
+	initial begin 
+		clk=0;
+		forever #5 clk=~clk;
 	end
+	initial begin
+		reset=1;
+		#20;
+		reset=0;
+	end
+	
 
 endmodule

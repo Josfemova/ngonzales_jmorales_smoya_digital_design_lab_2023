@@ -1,16 +1,13 @@
-module contador(input logic clk, reset, 
-					output logic [6:0] number);
+module contador (input logic clk, reset, 
+					output reg [5:0] number);
 					
-					always_ff @(posedge clk)begin
-					
-						number <= number + 7'd1;
-						
-						if (reset) begin
-						
-							number <= 7'b0;
-						end
-					end
-	
+	 always @(posedge clk) begin 
+			number <= number + 1;
+			if (reset) begin 
+				number <= 0; 
+			end
+	end 
 
 			 
 endmodule
+
