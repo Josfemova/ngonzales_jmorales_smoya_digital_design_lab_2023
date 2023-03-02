@@ -2,7 +2,7 @@ module contador_tb();
 	logic clk, reset;
 	
 	logic [5:0] num;
-	logic [5:0] start = 6'b001011;
+	
 	
 	
 
