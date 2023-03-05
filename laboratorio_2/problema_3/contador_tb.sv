@@ -2,6 +2,7 @@ module contador_tb();
 	logic clk, reset;
 	
 	logic [5:0] num;
+	logic [13:0] cat;
 	
 	
 	
@@ -10,7 +11,8 @@ module contador_tb();
 	
 	contador #(6) count_6(.clk(clk),
 						  .reset(reset),
-						  .number(num));
+						  .number(num),
+						  .catodo(cat));
 	
 	initial begin 
 		
