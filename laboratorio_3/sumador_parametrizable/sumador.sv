@@ -1,10 +1,11 @@
-module sumador #(parameter N = 32)(input logic [N-1:0] num1,
-													  input logic [N-1:0] num2,
-													  output logic [N-1:0] result);
+module sumador #(parameter N = 32)(input logic [N:0] num1,
+													  input logic [N:0] num2,
+													  output logic [N:0] result,
+													  output logic c_o);
 	
 	logic carry_out;
 	
-	logic [N-1:0] carry_reg;
+	logic [N:0] carry_reg;
 	
 	genvar i;
 	generate
@@ -17,7 +18,7 @@ module sumador #(parameter N = 32)(input logic [N-1:0] num1,
 		end
 	assign carry_out = carry_reg[N-1];
 	endgenerate
-	
+	assign c_o = carry_reg[N-1];
 													  
 endmodule
 
