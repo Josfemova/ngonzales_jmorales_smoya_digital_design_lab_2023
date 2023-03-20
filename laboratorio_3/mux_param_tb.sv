@@ -1,4 +1,4 @@
-module mux_tb;
+module mux_param_tb;
 
 localparam largo_bit = 4;
 localparam largo_control= 3;
@@ -7,7 +7,10 @@ logic [3:0] a,b,c,d,e,f,g,h;
 logic [2:0] sel;
 logic [3:0] out;
 
-mux_param #(largo_bit, largo_control) mux_param(a,b,c,d,e,f,g,h,sel,out);
+mux_param #(largo_bit, largo_control) mux_param(
+	.data_in({a,b,c,d,e,f,g,h}),
+	.sel(sel),
+	.data_out(out));
 
 initial begin
   a = 4'b0001;
