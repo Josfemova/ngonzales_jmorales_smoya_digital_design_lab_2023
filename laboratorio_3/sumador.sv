@@ -1,8 +1,9 @@
 module sumador #(parameter WIDTH = 32)(
-	input logic [WIDTH-1:0] num1,
-	input logic [WIDTH-1:0] num2,
-	output logic [WIDTH-1:0] result,
-	output logic c_o
+	input [WIDTH-1:0] num1,
+	input [WIDTH-1:0] num2,
+	input c_i,
+	output [WIDTH-1:0] result,
+	output c_o
 );	
 	logic carry_out;
 	
@@ -13,7 +14,7 @@ module sumador #(parameter WIDTH = 32)(
 	for (i=0; i<WIDTH; i=i+1)
 		begin: generate_adder
 			if (i==0)
-				half_adder f(num1[0], num2[0], result[0], carry_reg[0]);
+				full_adder f(num1[0], num2[0], c_i, result[0], carry_reg[0]);
 			else
 				full_adder f(num1[i], num2[i], carry_reg[i-1], result[i], carry_reg[i]);
 		end
