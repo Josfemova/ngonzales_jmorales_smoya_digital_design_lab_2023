@@ -1,7 +1,7 @@
 module reg_parallel #(parameter WIDTH=8) (
     input [WIDTH-1:0] In,
     input reset, clk,
-    output [WIDTH-1:0] Out
+    output reg [WIDTH-1:0] Out
 );
 reg [WIDTH-1:0] state;
 

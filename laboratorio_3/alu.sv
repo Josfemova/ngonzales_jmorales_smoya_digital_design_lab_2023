@@ -53,6 +53,5 @@ assign flag_negative = Result[WIDTH-1];
 assign flag_zero = (Result == 0) ? 1'b1 : 1'b0;
 
 assign ALUFlags = {flag_overflow, flag_carry, flag_negative, flag_zero};
-
  
 endmodule

@@ -6,18 +6,24 @@ module laboratorio_3(
 );
 
 wire [3:0] result_to_7seg;
+wire [6:0] seven_aux;
+wire [2:0] btn_aux;
+
+assign btn_aux = ~BtnUC;
 
 alu #(.WIDTH(4)) alu_top(
 	.A(SwA),
 	.B(SwB),
-	.ALUControl(BtnUC),
+	.ALUControl(btn_aux),
 	.ALUFlags(LedFlags),
 	.Result(result_to_7seg)
 );
 
 seven_segment_driver seven_seg(
 	.data_in(result_to_7seg),
-	.data_out(~SevenSegResult)
+	.data_out(seven_aux)
 );
+
+assign SevenSegResult = ~seven_aux;
 
 endmodule
