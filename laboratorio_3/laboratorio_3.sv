@@ -17,7 +17,7 @@ alu #(.WIDTH(4)) alu_top(
 
 seven_segment_driver seven_seg(
 	.data_in(result_to_7seg),
-	.data_out(SevenSegResult)
+	.data_out(~SevenSegResult)
 );
 
 endmodule
