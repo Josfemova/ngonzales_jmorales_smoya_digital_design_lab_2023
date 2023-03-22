@@ -42,7 +42,7 @@ set_global_assignment -name DEVICE 5CSEMA5F31C6
 set_global_assignment -name TOP_LEVEL_ENTITY laboratorio_3
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 21.1.1
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "20:29:40  MARCH 14, 2023"
-set_global_assignment -name LAST_QUARTUS_VERSION "22.1std.0 Lite Edition"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.1 Lite Edition"
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name BOARD "DE1-SoC Board"
 set_global_assignment -name EDA_SIMULATION_TOOL "Questa Intel FPGA (SystemVerilog)"
@@ -96,18 +96,6 @@ set_location_assignment PIN_V18 -to LedFlags[3]
 set_location_assignment PIN_V17 -to LedFlags[2]
 set_location_assignment PIN_W16 -to LedFlags[1]
 set_location_assignment PIN_V16 -to LedFlags[0]
-set_global_assignment -name SYSTEMVERILOG_FILE laboratorio_3_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sumador_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE sumador.sv
-set_global_assignment -name SYSTEMVERILOG_FILE reg_parallel.sv
-set_global_assignment -name SYSTEMVERILOG_FILE mux_param_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE mux_param.sv
-set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
-set_global_assignment -name SYSTEMVERILOG_FILE laboratorio_3.sv
-set_global_assignment -name SYSTEMVERILOG_FILE left_shifter.sv
-set_global_assignment -name SYSTEMVERILOG_FILE seven_segment_driver.sv
-set_global_assignment -name SYSTEMVERILOG_FILE left_shifter_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE alu_tb.sv
 set_global_assignment -name EDA_TEST_BENCH_NAME laboratorio_3_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id laboratorio_3_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME laboratorio_3_tb -section_id laboratorio_3_tb
@@ -131,6 +119,21 @@ set_global_assignment -name EDA_TEST_BENCH_FILE left_shifter.sv -section_id labo
 set_global_assignment -name EDA_TEST_BENCH_FILE sumador.sv -section_id laboratorio_3_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE seven_segment_driver.sv -section_id laboratorio_3_tb
 
+set_global_assignment -name SYSTEMVERILOG_FILE zero_detect_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE laboratorio_3_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE sumador_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE sumador.sv
+set_global_assignment -name SYSTEMVERILOG_FILE reg_parallel.sv
+set_global_assignment -name SYSTEMVERILOG_FILE mux_param_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE mux_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE laboratorio_3.sv
+set_global_assignment -name SYSTEMVERILOG_FILE left_shifter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE seven_segment_driver.sv
+set_global_assignment -name SYSTEMVERILOG_FILE left_shifter_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE alu_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE and_param.sv
 set_global_assignment -name SYSTEMVERILOG_FILE neg_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE or_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE right_shifter.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
