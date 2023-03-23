@@ -9,7 +9,8 @@ module sumador_tb;
  // Instantiate the Unit Under Test (UUT)
  sumador #(6) uut (
   .num1(input1), 
-  .num2(input2), 
+  .num2(input2),
+  .c_1(0), 
   .result(answer),
   .c_o(cout)
  );
