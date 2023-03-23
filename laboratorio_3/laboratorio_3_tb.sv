@@ -20,7 +20,7 @@ laboratorio_3 DUT(
 initial begin
 	A = 4'b0101;
 	B = 4'b0001;
-	UC = 3'b000;
+	UC = 3'b111;
 	#5;
 	B = 4'b0010;
 	#5;

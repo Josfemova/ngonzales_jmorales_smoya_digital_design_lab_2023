@@ -5,6 +5,10 @@ module alu #(parameter WIDTH=8)(
     output [WIDTH-1:0] Result
 );
 
+wire flag_overflow, flag_carry, flag_negative, flag_zero, cout, overflow_i0, overflow_i1, overflow_i2, is_sum;
+wire signed [WIDTH-1:0] negA, negB, AorB, AandB, OutB, Sum, OutLSR, OutRSR, OutRSRArithm;
+wire [WIDTH-1:0] OptionsB[1:0];
+
 neg_param #(.WIDTH(WIDTH)) notA(
 	.data_in(A),
 	.data_out(negA)
@@ -28,9 +32,7 @@ and_param #(.WIDTH(WIDTH)) andAB(
 );
 
 
-wire flag_overflow, flag_carry, flag_negative, flag_zero, cout, overflow_i0, overflow_i1, overflow_i2, is_sum;
-wire signed [WIDTH-1:0] negA, negB, AorB, AandB, OutB, Sum, OutLSR, OutRSR, OutRSRArithm;
-wire [WIDTH-1:0] OptionsB[1:0];
+
 
 assign OptionsB[0] = B;
 assign OptionsB[1] = negB;
