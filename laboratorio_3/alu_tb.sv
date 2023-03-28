@@ -5,17 +5,25 @@ parameter W=4;
 reg [2:0] UC;
 reg [3:0] Flags;
 
+logic clk=0;
+logic reset;
+
 reg [W-1:0] A,B,Q;
 
 alu #(.WIDTH(W)) DUT(
 	.A(A),
 	.B(B),
 	.ALUControl(UC),
+	.reset(reset),
+	.clk(clk),
 	.ALUFlags(Flags),
 	.Result(Q)
 );
 
+always #2 clk =~clk;
+
 initial begin
+	reset = 0;
 	A = 4'b1111;
 	B = 4'b0001;
 	UC = 3'b101;
