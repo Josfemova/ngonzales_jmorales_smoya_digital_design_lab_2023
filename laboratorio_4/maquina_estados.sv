@@ -1,6 +1,7 @@
 module maquina_estados(
 input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check, start, fin,
-output logic [3:0] estado_act);
+output logic [3:0] estado_act,
+output logic [3:0] i, i_1, j, j_1);
 
 typedef enum logic [3:0]{
 	START,
@@ -15,26 +16,24 @@ typedef enum logic [3:0]{
 } estado;
 
 estado sig_estado=START;
-logic [3:0] mov_save =0;
-logic uni = 0;
 
-initial estado_act = START;
-
-/*always @(rst)
+initial 
 begin
-	if (rst == 1)
-		begin 
-		 sig_estado <= START;
-		end
-end*/
+estado_act = START;
+
+i =0;
+i_1=0;
+j=0;
+j_1=0;
+
+end
+
 
 always @(posedge clk)
 begin
 	if (rst == 1)
 		begin 
 		 sig_estado <= START;
-		 uni <=0;
-		 mov_save <=0;
 		end
 	case(estado_act)
 		START: begin
@@ -51,8 +50,12 @@ begin
 		begin
 			sig_estado <= GEN2;
 		end
-		GEN2:
+		GEN2: //modificar cuando espera una señal
 		begin
+			i <=0;
+			i_1 <=1;
+			j <= 3;
+			j_1 <=2;
 			if(btn_izq == 1)
 			begin
 				sig_estado <= MOV_IZQ; 
@@ -72,14 +75,11 @@ begin
 		end
 		MOV_IZQ:
 		begin
-			mov_save <=MOV_IZQ;
 			if(check ==0)
 			begin
+				i <= i+1;
+				i_1 <= i_1+1;
 				sig_estado <= MOV_IZQ;
-			end
-			if(check ==1 && uni ==1)
-			begin
-				sig_estado <= GEN2;
 			end
 			else
 			begin
@@ -88,14 +88,11 @@ begin
 		end
 		MOV_DER:
 		begin
-		mov_save <=MOV_DER;
 			if(check ==0)
 			begin
+				j <= j-1;
+				j_1 <= j_1-1;
 				sig_estado <= MOV_DER;
-			end
-			if(check ==1 && uni ==1)
-			begin
-				sig_estado <= GEN2;
 			end
 			else
 			begin
@@ -104,14 +101,11 @@ begin
 		end
 		MOV_UP:
 		begin
-		mov_save <=MOV_UP;
 			if(check ==0)
 			begin
+				i <= i+1;
+				i_1 <= i_1+1;
 				sig_estado <= MOV_UP;
-			end
-			if(check ==1 && uni ==1)
-			begin
-				sig_estado <= GEN2;
 			end
 			else
 			begin
@@ -120,14 +114,11 @@ begin
 		end
 		MOV_DOWN:
 		begin
-		mov_save <=MOV_DOWN;
 			if(check ==0)
 			begin
+				j <= j-1;
+				j_1 <= j_1-1;
 				sig_estado <= MOV_DOWN;
-			end
-			if(check ==1 && uni ==1)
-			begin
-				sig_estado <= GEN2;
 			end
 			else
 			begin
@@ -136,26 +127,13 @@ begin
 		end
 		UNIR:
 		begin
-			uni <= 1;
 			if(win ==1 || loose ==1)
 			begin
 				sig_estado <= FIN;
 			end
-			if(win ==0 && mov_save == MOV_IZQ)
+			else
 			begin
-				sig_estado <= MOV_IZQ;
-			end
-			if(win ==0 && mov_save == MOV_DER)
-			begin
-				sig_estado <= MOV_DER;
-			end
-			if(win ==0 && mov_save == MOV_UP)
-			begin
-				sig_estado <= MOV_UP;
-			end
-			if(win ==0 && mov_save == MOV_DOWN)
-			begin
-				sig_estado <= MOV_DOWN;
+				sig_estado <= GEN2;
 			end
 		end
 		FIN:
@@ -167,8 +145,6 @@ begin
 			else
 			begin
 				sig_estado <= START;
-				mov_save <=0;
-				uni <= 0;
 			end
 		end
 	endcase
