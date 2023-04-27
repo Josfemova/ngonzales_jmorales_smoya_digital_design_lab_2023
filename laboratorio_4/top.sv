@@ -1,10 +1,10 @@
 module top (
-input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check, start, fin,
-output logic [3:0] estado_act,
-output logic [3:0] i, i_1, j, j_1
+input logic [3:0] estado,
+input logic [11:0] matriz_in [0:3][0:3],
+output logic [11:0] matriz [0:3][0:3]
 );
 
-maquina_estados maq(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check, start, fin,estado_act,i, i_1, j, j_1);
+mover_derecha mov(estado, matriz_in,matriz);
 
 
 

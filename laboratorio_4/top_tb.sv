@@ -1,92 +1,42 @@
 module top_tb();
-logic rst, btn_izq,btn_der,btn_up,btn_down,win,loose,check, start, fin;
+logic [3:0] estado;
 logic clk =0;
+logic [11:0] matriz [0:3][0:3];
+logic [11:0] matriz_in [0:3][0:3];
 
-logic [3:0] estado_act =0;
-
-logic [3:0] i, i_1, j,j_1 =0;
-
-top top_(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check, start, fin,estado_act,i, i_1, j,j_1);
+top top_(estado,matriz_in,matriz);
 
 
-always #1 clk = ~clk;
+always #50 clk = ~clk;
 
 initial begin
-rst =0;
-btn_izq=0;
-btn_der =0;
-btn_up =0;
-btn_down =0;
-win =0;
-loose =0;
-check =0;
-start =1;
-fin =0;
-
-#5
-
-rst =0;
-btn_izq=1;
-btn_der =0;
-btn_up =0;
-btn_down =0;
-win =0;
-loose =0;
-check =0;
-start =0;
-fin =0;
+	for(int i = 0; i < 4; i++) begin
+		for(int j = 0; j < 4; j++) begin
+      matriz_in[i][j] <= 12'b0;
+		end
+	end
+	matriz_in [0][0] <= 12'b00000000010;
+	matriz_in [0][1] <= 12'b00000000011;
+	matriz_in [1][0] <= 12'b00000000100;
+	matriz_in [1][2] <= 12'b00000001000;
+	estado = 4'b0000;
+	for(int i = 0; i < 4; i++) begin
+		for(int j = 0; j < 4; j++) begin
+      matriz[i][j] <= 12'b0;
+		end
+	end
+	#100
+	
+	estado = 4'b0001;
+	
+	#100;
 
 
 
-#20
 
-rst =0;
-btn_izq=0;
-btn_der =0;
-btn_up =0;
-btn_down =0;
-win =0;
-loose =0;
-check =1;
-start =0;
-fin =0;
-/*#10
-rst =0;
-btn_izq=0;
-btn_der =0;
-btn_up =0;
-btn_down =0;
-win =1;
-loose =0;
-check =0;
-start =0;
-fin =0;
 
-#5 
-rst =0;
-btn_izq=0;
-btn_der =0;
-btn_up =0;
-btn_down =0;
-win =1;
-loose =0;
-check =1;
-start =0;
-fin =0;
 
-#5
-rst =0;
-btn_izq=0;
-btn_der =0;
-btn_up =0;
-btn_down =0;
-win =1;
-loose =0;
-check =0;
-start =0;
-fin =1;*/
 
-#5;
 
 
 end

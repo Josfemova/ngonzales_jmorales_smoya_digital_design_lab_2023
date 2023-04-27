@@ -1,6 +1,6 @@
 module maquina_estados(
-input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check, start, fin,
-output logic [3:0] estado_act,
+input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check,uni, start, fin,
+output logic [3:0] estado_act, mov,
 output logic [3:0] i, i_1, j, j_1);
 
 typedef enum logic [3:0]{
@@ -11,6 +11,7 @@ typedef enum logic [3:0]{
 	MOV_IZQ,
 	MOV_UP,
 	MOV_DOWN,
+	PREMERGE,
 	UNIR,
 	FIN
 } estado;
@@ -52,38 +53,47 @@ begin
 		end
 		GEN2: //modificar cuando espera una señal
 		begin
-			i <=0;
-			i_1 <=1;
+			mov <= 0;
+			i <=1;
+			i_1 <=0;
 			j <= 3;
 			j_1 <=2;
 			if(btn_izq == 1)
 			begin
+				mov <= MOV_IZQ;
 				sig_estado <= MOV_IZQ; 
 			end
 			if(btn_der == 1)
 			begin
+				mov <= MOV_DER;
 				sig_estado <= MOV_DER; 
 			end
 			if(btn_up == 1)
 			begin
+				mov <= MOV_UP;
 				sig_estado <= MOV_UP; 
 			end
 			if(btn_down == 1)
 			begin
+				mov <= MOV_DOWN;
 				sig_estado <= MOV_DOWN; 
 			end
 		end
 		MOV_IZQ:
 		begin
-			if(check ==0)
+			if(check ==1)
+			begin
+				i <=0;
+				i_1 <=1;
+				j <= 3;
+				j_1 <=2;
+				sig_estado <= UNIR;
+			end
+			else
 			begin
 				i <= i+1;
 				i_1 <= i_1+1;
 				sig_estado <= MOV_IZQ;
-			end
-			else
-			begin
-				sig_estado <= UNIR;
 			end
 		end
 		MOV_DER:
@@ -96,6 +106,10 @@ begin
 			end
 			else
 			begin
+				i <=0;
+				i_1 <=1;
+				j <= 3;
+				j_1 <=2;
 				sig_estado <= UNIR;
 			end
 		end
@@ -109,6 +123,10 @@ begin
 			end
 			else
 			begin
+				i <=0;
+				i_1 <=1;
+				j <= 3;
+				j_1 <=2;
 				sig_estado <= UNIR;
 			end
 		end
@@ -122,7 +140,11 @@ begin
 			end
 			else
 			begin
-				sig_estado <= UNIR;
+				i <=0;
+				i_1 <=1;
+				j <= 3;
+				j_1 <=2;
+				sig_estado <= PREMERGE;
 			end
 		end
 		UNIR:
@@ -131,9 +153,24 @@ begin
 			begin
 				sig_estado <= FIN;
 			end
-			else
+			if (uni == 1)
 			begin
 				sig_estado <= GEN2;
+			end
+			else
+			begin
+				sig_estado <= UNIR;
+				if(mov == MOV_IZQ || mov == MOV_UP)
+				begin
+					i <= i+1;
+					i_1 <= i_1+1;
+				end
+				if(mov == MOV_DER || mov == MOV_DOWN)
+				begin
+					j <= j-1;
+					j_1 <= j_1-1;
+				sig_estado <= MOV_DER;
+				end
 			end
 		end
 		FIN:
