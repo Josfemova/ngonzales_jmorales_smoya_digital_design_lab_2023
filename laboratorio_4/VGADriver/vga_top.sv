@@ -24,10 +24,21 @@ module vga_top(
     if (reset)
        rgb_reg <= 0;
     else
-		if(x>100)
+		if(x<200)
+		begin
+			if(y<90)
 			rgb_reg <= 24'b001000000000000011111111;
+			else if((y>=90)&&(y<180))
+				rgb_reg <= 24'b111111111111111111111111;
+			else if((y>=180)&&(y<300))
+				rgb_reg <= 24'b111111110000000000000000;
+			else if((y>=300)&&(y<390))
+				rgb_reg <= 24'b111111111111111111111111;
+			else
+				rgb_reg <= 24'b001000000000000011111111;
+		end
 		else
-			rgb_reg <= 24'b111100000000000011110000;
+			rgb_reg <= 24'b001000001111111100000000;
     
    
     assign rgb = (video_on) ? rgb_reg : 24'b0;   // while in display area RGB color = sw, else all OFF
