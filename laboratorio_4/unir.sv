@@ -1,153 +1,147 @@
 module unir(
-input logic [3:0] mov, estado,
-input logic i, i_1, j, j_1,
-input logic clk,
-output logic [11:0] matriz [3:0][3:0],
-output logic checked
-);
+input logic [3:0] estado, mov, 
+input logic [11:0] matriz_in [0:3][0:3],
+output logic [11:0] matriz [0:3][0:3]);
 
-always @(posedge clk)
+logic [11:0] matriz_aux [0:3][0:3] = '{default:0};
+int n,m = 0;
+
+always @(estado)
 begin
-	if(estado == 4'b1000)
+	if(estado == 4'b0001)
 	begin
-		if (mov == 4'b0100) // se activa la unión a la izquierda
+		if(mov == 4'b0100)
 		begin
-			if(i <= 4)
+			for(int i = 0; i<4; i++)
 			begin
-				checked <= 1;
-			end
-			else
-			begin
-				//fila 1
-				if(matriz[0][i_1] == 0 || matriz[0][i] == matriz[0][i_1])
+				n = 0;
+				m=0;
+				for(int j =0; j<4; j++)
 				begin
-					matriz[0][i_1] <= matriz[0][i_1] + matriz[0][i];
-					matriz[0][i] <= 0;
-				end
-				//fila 2
-				if(matriz[1][i_1] == 0 || matriz[1][i] == matriz[1][i_1])
-				begin
-					matriz[1][i_1] <= matriz[1][i_1] + matriz[1][i];
-					matriz[1][i] <= 0;
-				end
-				//fila 3
-				if(matriz[2][i_1] == 0 || matriz[2][i] == matriz[2][i_1])
-				begin
-					matriz[2][i_1] <= matriz[2][i_1] + matriz[2][i];
-					matriz[2][i] <= 0;
-				end
-				//fila 4
-				if(matriz[3][i_1] == 0 || matriz[3][i] == matriz[3][i_1])
-				begin
-					matriz[3][i_1] <= matriz[3][i_1] + matriz[3][i];
-					matriz[3][i] <= 0;
+					if(m ==3)
+					begin
+						matriz_aux[i][n] = matriz_in[i][m];
+						break;
+					end
+					else if(matriz_in[i][m] == matriz_in [i][m+1])
+					begin
+						matriz_aux[i][n] = matriz_in[i][m] + matriz_in [i][m+1];
+						m=m +2;
+						n = n+1;
+					end
+					else if(matriz_in[i][m] != 12'b000000000000)
+					begin
+						matriz_aux[i][n] = matriz_in[i][m];
+						n = n+1;
+						m=m +1;
+					end
+					else
+					begin
+						m = m+1;
+					end
 				end
 			end
 		end
-		if (mov == 4'b0011) // se activa la unión a la derecha
+		if(mov == 4'b0011)
 		begin
-			if(i < 0)
+			for(int i = 0; i<4; i++)
 			begin
-				checked <= 1;
-			end
-			else
-			begin
-				//fila 1
-				if(matriz[0][i] == 0 || matriz [0][i] == matriz [0][i_1])
+				n = 3;
+				m=3;
+				for(int j =3; j>=0; j--)
 				begin
-					matriz[0][i] <= matriz[0][i_1] + matriz[0][i];
-					matriz[0][i_1] <= 0;
-				end
-				//fila 2
-				if(matriz[1][i] == 0|| matriz [1][i] == matriz [1][i_1])
-				begin
-					matriz[1][i] <= matriz[1][i_1] + matriz[1][i];
-					matriz[1][i_1] <= 0;
-				end
-				//fila 3
-				if(matriz[2][i] == 0 || matriz [2][i] == matriz [2][i_1])
-				begin
-					matriz[2][i] <= matriz[2][i_1] + matriz[2][i];
-					matriz[2][i_1] <= 0;
-				end
-				//fila 4
-				if(matriz[3][i] == 0 || matriz [3][i] == matriz [3][i_1])
-				begin
-					matriz[3][i] <= matriz[3][i_1] + matriz[3][i];
-					matriz[3][i_1] <= 0;
+					if(m ==0)
+					begin
+						matriz_aux[i][n] = matriz_in[i][m];
+						break;
+					end
+					else if(matriz_in[i][m] == matriz_in [i][m-1])
+					begin
+						matriz_aux[i][n] = matriz_in[i][m] + matriz_in [i][m-1];
+						m=m -2;
+						n = n-1;
+					end
+					else if(matriz_in[i][m] != 12'b000000000000)
+					begin
+						matriz_aux[i][n] = matriz_in[i][m];
+						n = n-1;
+						m=m -1;
+					end
+					else
+					begin
+						m = m-1;
+					end
 				end
 			end
 		end
-		if (mov == 4'b0101) // se activa la unión hacia arriba
+		if(mov == 4'b0101)
 		begin
-			if(i <= 4)
+			for(int i = 0; i<4; i++)
 			begin
-				checked <= 1;
-			end
-			else
-			begin
-				//Col 1
-				if(matriz[i_1][0] == 0 || matriz[i_1][0] == matriz[i][0])
+				n = 0;
+				m=0;
+				for(int j =0; j<4; j++)
 				begin
-					matriz[i_1][0] <= matriz[i_1][0] + matriz[i][0];
-					matriz[i][0] <= 0;
-				end
-				//Col 2
-				if(matriz[i_1][1] == 0 || matriz[i_1][1] == matriz[i][1])
-				begin
-					matriz[i_1][1] <= matriz[i_1][1] + matriz[i][1];
-					matriz[i][1] <= 0;
-				end
-				//Col 3
-				if(matriz[i_1][2] == 0 || matriz[i_1][2] == matriz[i][2])
-				begin
-					matriz[i_1][2] <= matriz[i_1][2] + matriz[i][2];
-					matriz[i][2] <= 0;
-				end
-				//Col 4
-				if(matriz[i_1][3] == 0 || matriz[i_1][3] == matriz[i][3])
-				begin
-					matriz[i_1][3] <= matriz[i_1][3] + matriz[i][3];
-					matriz[i][3] <= 0;
+					if(m ==3)
+					begin
+						matriz_aux[n][i] = matriz_in[m][i];
+						break;
+					end
+					else if(matriz_in[m][i] == matriz_in [m+1][i])
+					begin
+						matriz_aux[n][i] = matriz_in[m][i] + matriz_in [m+1][i];
+						m=m +2;
+						n = n+1;
+					end
+					else if(matriz_in[m][i] != 12'b000000000000)
+					begin
+						matriz_aux[n][i] = matriz_in[m][i];
+						n = n+1;
+						m=m +1;
+					end
+					else
+					begin
+						m = m+1;
+					end
 				end
 			end
 		end
-		if (mov == 4'b0110) // se activa la unión hacia abajo
+		if(mov == 4'b0110)
 		begin
-			if(i == 4)
+			for(int i = 0; i<4; i++)
 			begin
-				checked <= 1;
-			end
-			else
-			begin
-				//Col 1
-				if(matriz[i][0] == 0 || matriz[i_1][0] == matriz[i][0])
+				n = 3;
+				m=3;
+				for(int j =3; j>=0; j--)
 				begin
-					matriz[i][0] <= matriz[i_1][0] + matriz[i][0];
-					matriz[i_1][0] <= 0;
-				end
-				//Col 2
-				if(matriz[i][1] == 0 || matriz[i_1][1] == matriz[i][1])
-				begin
-					matriz[i][1] <= matriz[i_1][1] + matriz[i][1];
-					matriz[i_1][1] <= 0;
-				end
-				//Col 3
-				if(matriz[i][2] == 0 || matriz[i_1][2] == matriz[i][2])
-				begin
-					matriz[i][2] <= matriz[i_1][2] + matriz[i][2];
-					matriz[i_1][2] <= 0;
-				end
-				//Col 4
-				if(matriz[i][3] == 0 || matriz[i_1][3] == matriz[i][3])
-				begin
-					matriz[i][3] <= matriz[i_1][3] + matriz[i][3];
-					matriz[i_1][3] <= 0;
+					if(m ==0)
+					begin
+						matriz_aux[n][i] = matriz_in[m][i];
+						break;
+					end
+					else if(matriz_in[m][i] == matriz_in [m-1][i])
+					begin
+						matriz_aux[n][i] = matriz_in[m][i] + matriz_in [m-1][i];
+						m=m -2;
+						n = n-1;
+					end
+					else if(matriz_in[m][i] != 12'b000000000000)
+					begin
+						matriz_aux[n][i] = matriz_in[m][i];
+						n = n-1;
+						m=m -1;
+					end
+					else
+					begin
+						m = m-1;
+					end
 				end
 			end
 		end
 	end
 end
 
-endmodule 
+assign matriz = matriz_aux;
 
+
+endmodule
