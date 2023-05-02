@@ -1,32 +1,25 @@
 module maquina_estados(
-input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,loose,check,uni, start, fin,
-output logic [3:0] estado_act, mov,
-output logic [3:0] i, i_1, j, j_1);
+input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,
+output logic [3:0] estado_act,
+output logic [2:0] mov);
 
 typedef enum logic [3:0]{
-	START,
-	GEN1,
-	GEN2,
-	MOV_DER,
-	MOV_IZQ,
-	MOV_UP,
-	MOV_DOWN,
-	PREMERGE,
+	START, 
+	GEN,
+	MERGE_MAT_1,
+	WAIT,
+	MOV,
+	MERGE_MAT_2,
 	UNIR,
+	MERGE_MAT_3,
 	FIN
 } estado;
 
-estado sig_estado=START;
+estado sig_estado= START;
 
 initial 
 begin
 estado_act = START;
-
-i =0;
-i_1=0;
-j=0;
-j_1=0;
-
 end
 
 
@@ -37,143 +30,77 @@ begin
 		 sig_estado <= START;
 		end
 	case(estado_act)
-		START: begin
+		START: 
+		begin// estado de inicio, espera hasta que haya una señal de comienzo 
+			mov <= 3'b000;
 			if(start ==1)
 			begin
-				sig_estado <= GEN1;
+				sig_estado <= GEN;
 			end
 			else
 			begin
 				sig_estado <= START;
 			end
 		end
-		GEN1:
+		GEN: // genera un numero random a la matriz
 		begin
-			sig_estado <= GEN2;
+			sig_estado <= MERGE_MAT_1;
 		end
-		GEN2: //modificar cuando espera una señal
+		MERGE_MAT_1:
 		begin
-			mov <= 0;
-			i <=1;
-			i_1 <=0;
-			j <= 3;
-			j_1 <=2;
+			sig_estado <= WAIT;
+		end
+		WAIT: // En este estado se espera hasta recibir una señal de movimiento
+		begin
 			if(btn_izq == 1)
 			begin
-				mov <= MOV_IZQ;
-				sig_estado <= MOV_IZQ; 
+				sig_estado <= MOV;
+				mov <= 3'b001;
 			end
-			if(btn_der == 1)
+			else if(btn_der == 1)
 			begin
-				mov <= MOV_DER;
-				sig_estado <= MOV_DER; 
+				sig_estado <= MOV;
+				mov <= 3'b010;
 			end
-			if(btn_up == 1)
+			else if(btn_up == 1)
 			begin
-				mov <= MOV_UP;
-				sig_estado <= MOV_UP; 
+				sig_estado <= MOV;
+				mov <= 3'b011;
 			end
-			if(btn_down == 1)
+			else if(btn_down == 1)
 			begin
-				mov <= MOV_DOWN;
-				sig_estado <= MOV_DOWN; 
-			end
-		end
-		MOV_IZQ:
-		begin
-			if(check ==1)
-			begin
-				i <=0;
-				i_1 <=1;
-				j <= 3;
-				j_1 <=2;
-				sig_estado <= UNIR;
+				sig_estado <= MOV;
+				mov <= 3'b100;
 			end
 			else
 			begin
-				i <= i+1;
-				i_1 <= i_1+1;
-				sig_estado <= MOV_IZQ;
+				sig_estado <= WAIT;
 			end
 		end
-		MOV_DER:
+		MOV:
 		begin
-			if(check ==0)
+			sig_estado <= MERGE_MAT_2;
+		end
+		MERGE_MAT_2: //Copia la matriz de output en la de input
+		begin
+			sig_estado <= UNIR;
+		end
+		UNIR: // Estado que suma los numeros iguales
+		begin
+			sig_estado <= MERGE_MAT_3;
+		end
+		MERGE_MAT_3: // Copia la matriz de output en la de input despues de unir
+		begin
+			if(win ==0 || lose ==0)
 			begin
-				j <= j-1;
-				j_1 <= j_1-1;
-				sig_estado <= MOV_DER;
+				sig_estado <=FIN; 
 			end
 			else
 			begin
-				i <=0;
-				i_1 <=1;
-				j <= 3;
-				j_1 <=2;
-				sig_estado <= UNIR;
+				sig_estado <= GEN;
 			end
 		end
-		MOV_UP:
-		begin
-			if(check ==0)
-			begin
-				i <= i+1;
-				i_1 <= i_1+1;
-				sig_estado <= MOV_UP;
-			end
-			else
-			begin
-				i <=0;
-				i_1 <=1;
-				j <= 3;
-				j_1 <=2;
-				sig_estado <= UNIR;
-			end
-		end
-		MOV_DOWN:
-		begin
-			if(check ==0)
-			begin
-				j <= j-1;
-				j_1 <= j_1-1;
-				sig_estado <= MOV_DOWN;
-			end
-			else
-			begin
-				i <=0;
-				i_1 <=1;
-				j <= 3;
-				j_1 <=2;
-				sig_estado <= PREMERGE;
-			end
-		end
-		UNIR:
-		begin
-			if(win ==1 || loose ==1)
-			begin
-				sig_estado <= FIN;
-			end
-			if (uni == 1)
-			begin
-				sig_estado <= GEN2;
-			end
-			else
-			begin
-				sig_estado <= UNIR;
-				if(mov == MOV_IZQ || mov == MOV_UP)
-				begin
-					i <= i+1;
-					i_1 <= i_1+1;
-				end
-				if(mov == MOV_DER || mov == MOV_DOWN)
-				begin
-					j <= j-1;
-					j_1 <= j_1-1;
-				sig_estado <= MOV_DER;
-				end
-			end
-		end
-		FIN:
+		FIN: // Estado de fin, no pasa al siguiente a menos de una señal
 		begin
 			if(fin ==0)
 			begin
@@ -182,6 +109,7 @@ begin
 			else
 			begin
 				sig_estado <= START;
+				mov = 3'b000;
 			end
 		end
 	endcase

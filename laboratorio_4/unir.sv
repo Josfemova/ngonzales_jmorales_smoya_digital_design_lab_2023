@@ -1,5 +1,6 @@
 module unir(
-input logic [3:0] estado, mov, 
+input logic [3:0] estado, 
+input logic [2:0] mov, 
 input logic [11:0] matriz_in [0:3][0:3],
 output logic [11:0] matriz [0:3][0:3]);
 
@@ -8,9 +9,9 @@ int n,m = 0;
 
 always @(estado)
 begin
-	if(estado == 4'b0001)
+	if(estado == 4'b0110)
 	begin
-		if(mov == 4'b0100)
+		if(mov == 3'b001)
 		begin
 			for(int i = 0; i<4; i++)
 			begin
@@ -42,7 +43,7 @@ begin
 				end
 			end
 		end
-		if(mov == 4'b0011)
+		if(mov == 3'b010)
 		begin
 			for(int i = 0; i<4; i++)
 			begin
@@ -74,7 +75,7 @@ begin
 				end
 			end
 		end
-		if(mov == 4'b0101)
+		if(mov == 3'b011)
 		begin
 			for(int i = 0; i<4; i++)
 			begin
@@ -106,7 +107,7 @@ begin
 				end
 			end
 		end
-		if(mov == 4'b0110)
+		if(mov == 3'b100)
 		begin
 			for(int i = 0; i<4; i++)
 			begin
