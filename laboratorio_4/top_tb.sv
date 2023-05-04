@@ -10,7 +10,7 @@ logic [11:0] matriz_in [0:3][0:3];
 
 top top_(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,matriz_in,estado, mov,matriz);
 
-always #30 clk = ~clk;
+always #10 clk = ~clk;
 
 initial begin
 
@@ -35,6 +35,12 @@ for(int i = 0; i < 4; i++) begin
 	matriz_in [3][1] <= 12'b00000000000;
 	matriz_in [3][2] <= 12'b00000000100;
 	matriz_in [3][3] <= 12'b00000000010;
+	
+for(int i = 0; i < 4; i++) begin
+		for(int j = 0; j < 4; j++) begin
+      matriz[i][j] <= 12'b0;
+		end
+	end
 
 rst =0;
 btn_izq =0;
@@ -61,9 +67,9 @@ start =1;
 #200
 
 rst =0;
-btn_izq =0;
+btn_izq =1;
 btn_der=0;
-btn_up=1;
+btn_up=0;
 btn_down =0;
 win =0;
 lose =0;

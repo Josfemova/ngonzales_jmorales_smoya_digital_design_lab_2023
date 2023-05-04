@@ -12,7 +12,10 @@ typedef enum logic [3:0]{
 	MERGE_MAT_2,
 	UNIR,
 	MERGE_MAT_3,
-	FIN
+	FIN,
+	CLEAN_1,
+	CLEAN_2,
+	CLEAN_3
 } estado;
 
 estado sig_estado= START;
@@ -48,7 +51,7 @@ begin
 		end
 		MERGE_MAT_1:
 		begin
-			sig_estado <= WAIT;
+			sig_estado <= CLEAN_1;
 		end
 		WAIT: // En este estado se espera hasta recibir una señal de movimiento
 		begin
@@ -83,7 +86,7 @@ begin
 		end
 		MERGE_MAT_2: //Copia la matriz de output en la de input
 		begin
-			sig_estado <= UNIR;
+			sig_estado <= CLEAN_2;
 		end
 		UNIR: // Estado que suma los numeros iguales
 		begin
@@ -91,14 +94,7 @@ begin
 		end
 		MERGE_MAT_3: // Copia la matriz de output en la de input despues de unir
 		begin
-			if(win ==0 || lose ==0)
-			begin
-				sig_estado <=FIN; 
-			end
-			else
-			begin
-				sig_estado <= GEN;
-			end
+			sig_estado <= CLEAN_3;
 		end
 		FIN: // Estado de fin, no pasa al siguiente a menos de una señal
 		begin
@@ -110,6 +106,25 @@ begin
 			begin
 				sig_estado <= START;
 				mov = 3'b000;
+			end
+		end
+		CLEAN_1:
+		begin
+			sig_estado <= WAIT;
+		end
+		CLEAN_2:
+		begin
+			sig_estado <= UNIR;
+		end
+		CLEAN_3:
+		begin
+			if(win ==0 || lose ==0)
+			begin
+				sig_estado <=FIN; 
+			end
+			else
+			begin
+				sig_estado <= GEN;
 			end
 		end
 	endcase

@@ -8,7 +8,7 @@ output logic [11:0] matriz [0:3][0:3]
 int n,m = 0;
 
 logic [11:0] matriz_aux [0:3][0:3] = '{default:0};
-
+logic added = 0;
 always @(estado)
 begin
 	if(mov == 3'b011 && estado == 4'b0100)
@@ -194,9 +194,28 @@ begin
 			end
 		end
 	end
+	if(estado == 4'b0001)
+	begin
+		added = 0;
+		for (int i=0; i<4; i++)
+		begin
+			for(int j=0; j<4; j++)
+			begin
+				if((matriz_in[i][j] == 12'b000000000000) && !added)
+				begin
+					matriz_aux[i][j] = 12'b000000000010;
+					added = 1;
+				end
+				else
+				begin
+					matriz_aux[i][j] = matriz_in[i][j];
+				end
+			end
+		end
+	end
 	if(estado == 4'b0010 || estado == 4'b0101 || estado == 4'b0111)
 	begin
-		matriz = matriz_aux;
+		matriz <= matriz_aux;
 	end
 	if(estado == 4'b1001 || estado == 4'b1010 || estado == 1011)
 	begin
