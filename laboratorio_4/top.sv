@@ -6,17 +6,29 @@ output logic [2:0] mov,
 output logic [11:0] matriz [0:3][0:3]
 );
 
-//unir un_(estado,mov, matriz_in,matriz);
+logic [11:0] matriz_in_aux [0:3][0:3] = '{default:0};
 
-maquina_estados maq(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,estado_act, mov);
 
-//mover_izquierda mov_izq(estado_act, mov, matriz_in, matriz);
+initial begin
+	matriz_in_aux [0][3] <= 12'b00000000010;
+	matriz_in_aux [0][2] <= 12'b00000000010;
+	matriz_in_aux [1][3] <= 12'b00000000100;
+	matriz_in_aux [2][2] <= 12'b00000001000;
 
-//mover_derecha mov_der(estado_act, mov, matriz_in, matriz);
+end
 
-mover_arriba mov_up(estado_act, mov, matriz_in, matriz);
+maquina_estados maq(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,estado, mov);
 
-//mover_abajo mov_down(estado_act, mov, matriz_in, matriz);
+//juego juego(estado,mov, matriz_in_aux,matriz);
+
+always @(estado)
+begin
+	if(estado == 4'b0010 || estado == 4'b0101 || estado == 4'b0111)
+	begin
+	  matriz_in_aux = matriz;
+	end
+end
+
 
 
 endmodule

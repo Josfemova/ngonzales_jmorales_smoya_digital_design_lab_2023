@@ -10,7 +10,7 @@ logic [11:0] matriz_in [0:3][0:3];
 
 top top_(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,matriz_in,estado, mov,matriz);
 
-always #10 clk = ~clk;
+always #30 clk = ~clk;
 
 initial begin
 
@@ -80,7 +80,7 @@ btn_down =0;
 win =0;
 lose =0;
 fin =0;
-start =1;
+start =0;
 
 #100
 
@@ -94,45 +94,5 @@ lose =0;
 fin =1;
 start =0;
 end
-
-/*initial begin                          initial begin de unir
-	for(int i = 0; i < 4; i++) begin
-		for(int j = 0; j < 4; j++) begin
-      matriz_in[i][j] <= 12'b0;
-		end
-	end
-	matriz_in [0][0] <= 12'b00000000000;
-	matriz_in [0][1] <= 12'b00000000000;
-	matriz_in [0][2] <= 12'b00000000000;
-	matriz_in [0][3] <= 12'b00000001000;
-	matriz_in [1][0] <= 12'b00000000000;
-	matriz_in [1][1] <= 12'b00000000000;
-	matriz_in [1][2] <= 12'b00000001000;
-	matriz_in [1][3] <= 12'b00000000010;
-	matriz_in [2][0] <= 12'b00000000000;
-	matriz_in [2][1] <= 12'b00000000000;
-	matriz_in [2][2] <= 12'b00000000010;
-	matriz_in [2][3] <= 12'b00000000010;
-	matriz_in [3][0] <= 12'b00000000000;
-	matriz_in [3][1] <= 12'b00000000000;
-	matriz_in [3][2] <= 12'b00000000100;
-	matriz_in [3][3] <= 12'b00000000010;
-	estado = 4'b0000;
-	for(int i = 0; i < 4; i++) begin
-		for(int j = 0; j < 4; j++) begin
-      matriz[i][j] <= 12'b0;
-		end
-	end
-	#100
-	
-	estado = 4'b0001;
-	mov = 4'b0110;
-	
-	#100
-	
-	estado = 4'b0000;
-	#100;
-
-end*/
 
 endmodule
