@@ -10,8 +10,7 @@ module vga_driver(
     output [9:0] x,     // posicion x del pixel, 0-799
     output [9:0] y      // posicion y del pixel, 0-524
     );
-    
-    
+	 
     // Limites horizontales Total = 800 pixels
     parameter HD = 640;             // horizontal display area width in pixels
     parameter HF = 48;              // horizontal front porch width in pixels
@@ -24,20 +23,12 @@ module vga_driver(
     parameter VB = 33;              // vertical back porch length in pixels   
     parameter VR = 2;               // vertical retrace length in pixels  
     parameter VMAX = VD+VF+VB+VR-1; // max value of vertical counter = 524   
-    
-    // Divisor del reloj de 50MHz a 25MHz
-	wire r_25MHz;
-	wire w_25MHz;
-	
-	always @(posedge clk_50MHz or posedge reset)
-		if(reset)
-		  r_25MHz <= 0;
-		else
-		  r_25MHz <= r_25MHz + 1;
-	
-	assign w_25MHz = (r_25MHz == 0) ? 1 : 0; // assert tick 1/4 of the time
+
     // -------------------------------
-    
+    wire vga_clk;
+	 
+	 // 25MHz clock
+	 clock_div #(.DIV(2)) divider(.clk_in(clk_50MHz), .clk_out(vga_clk));
     
     reg [9:0] h_count_reg, h_count_next;
     reg [9:0] v_count_reg, v_count_next;
@@ -62,25 +53,26 @@ module vga_driver(
         end
          
     //Contador horizontal
-    always @(posedge w_25MHz or posedge reset)      
+    //always @(posedge w_25MHz or posedge reset)    
+	 always @(posedge vga_clk or posedge reset) begin   	 
         if(reset)
-            h_count_next = 0;
+            h_count_next <= 0;
         else
             if(h_count_reg == HMAX)                 
-                h_count_next = 0;
+                h_count_next <= 0;
             else
-                h_count_next = h_count_reg + 1;         
+                h_count_next <= h_count_reg + 1;         
   
     // Contador vertical
-    always @(posedge w_25MHz or posedge reset)
         if(reset)
             v_count_next = 0;
         else
             if(h_count_reg == HMAX)                
                 if((v_count_reg == VMAX))           
-                    v_count_next = 0;
+                    v_count_next <= 0;
                 else
-                    v_count_next = v_count_reg + 1;
+                    v_count_next <= v_count_reg + 1;
+		end
         
     
     assign h_sync_next = (h_count_reg >= (HD+HB) && h_count_reg <= (HD+HB+HR-1));
@@ -96,6 +88,6 @@ module vga_driver(
     assign vsync  = v_sync_reg;
     assign x      = h_count_reg;
     assign y      = v_count_reg;
-    assign p_tick = w_25MHz;
+    assign p_tick = vga_clk;//w_25MHz;
             
 endmodule

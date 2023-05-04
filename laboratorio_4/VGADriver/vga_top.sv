@@ -8,39 +8,60 @@ module vga_top(
 	output vsync,
 	output [23:0] rgb,      
 	output p_tick,
-	output [9:0] x,     
-	output [9:0] y 
+	output sync,
+	output blank
 );
 	
-	
-	reg [23:0] rgb_reg;    
-	wire video_on;         
 
-    
-    vga_driver vga_c(.clk_50MHz(clk_50MHz), .reset(reset), .hsync(hsync), .vsync(vsync),
-                         .video_on(video_on), .p_tick(p_tick), .x(x), .y(y));
-    
-    always @(posedge clk_50MHz or posedge reset)
-    if (reset)
-       rgb_reg <= 0;
-    else
-		if(x<200)
-		begin
-			if(y<90)
-			rgb_reg <= 24'b001000000000000011111111;
-			else if((y>=90)&&(y<180))
-				rgb_reg <= 24'b111111111111111111111111;
-			else if((y>=180)&&(y<300))
-				rgb_reg <= 24'b111111110000000000000000;
-			else if((y>=300)&&(y<390))
-				rgb_reg <= 24'b111111111111111111111111;
-			else
-				rgb_reg <= 24'b001000000000000011111111;
-		end
+	wire video_on;
+
+	
+	wire [23:0] rgb_reg;    
+	reg [9:0] cx = 0;
+	reg [9:0] cy = 0;
+	reg [9:0] nx, ny;
+	reg toggle = 1'b0;
+	reg [11:0] game_state[3:0][3:0];
+
+	 wire misc_clk, vga_clk,ssa, locked;
+	 // 25MHz clock
+	 pll_25 (clk_50MHz, reset, ssa, locked);
+	 clock_div #(.DIV(25000000)) divider(.clk_in(ssa), .clk_out(misc_clk));
+	 //assign vga_clk = rvga_clk;
+	 clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(vga_clk));
+	 //pll_25 (clk_50MHz, ~reset, vga_clock, locked);
+	 
+	 always @(posedge misc_clk) begin
+		if(toggle == 1'b0) 
+			game_state <= '{'{2,4,8,16}, '{32,2048,1024,512}, '{256,128,64,32}, '{16,8,4,2}};
 		else
-			rgb_reg <= 24'b001000001111111100000000;
+			game_state <= '{'{0,4,0,16}, '{32,2,4,2}, '{8,16,4,2}, '{1024,8,4,2}};
+			
+		toggle <= ~toggle;
+	 end
+	 
     
-   
+    xvga_driver vga_c(.vga_clk(vga_clk), .reset(reset), .hsync(hsync), .vsync(vsync),
+                        .video_on(video_on), .p_tick(p_tick), .x(nx), .y(ny), .sync(sync), .blank(blank));
+	 
+	 screen_drawer sd(
+		 .x(cx),
+		 .y(cy),
+		 .game_state(game_state),
+		 .rgb_color(rgb_reg)
+	 );
+    
+    always @(posedge clk_50MHz or posedge reset) begin
+		if (reset) begin
+			//rgb_reg <= 0;
+			cx <= 0;
+			cy <= 0;
+		end else begin
+			cx <= nx;
+			cy <= ny;
+		end
+	 end
+	 
     assign rgb = (video_on) ? rgb_reg : 24'b0;   // while in display area RGB color = sw, else all OFF
         
 endmodule
