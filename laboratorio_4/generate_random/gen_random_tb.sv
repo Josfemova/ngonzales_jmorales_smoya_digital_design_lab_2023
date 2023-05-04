@@ -3,10 +3,9 @@ logic [3:0] estado =0;
 logic [11:0] matriz [0:3][0:3];
 logic [11:0] matriz_in [0:3][0:3];
 
-logic [1:0] random = 0;
 
 
-gen_random dut(estado, matriz_in, matriz);
+gen_2 dut(estado, matriz_in, matriz);
 
 initial begin
 
@@ -26,8 +25,8 @@ initial begin
 	#100
 	estado = 4'b0000;
 	matriz_in[0][3] <= 12'b00000001000;
-	#100
 	
+	#100
 	estado = 4'b0100;
 	#100
 	estado = 4'b0000;
