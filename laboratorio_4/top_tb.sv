@@ -1,14 +1,14 @@
 module top_tb();
 logic [3:0] estado =0;
 logic [2:0]mov=0;
-logic rst, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin;
+logic rst, btn_izq,btn_der,btn_up,btn_down, start, fin;
 logic clk =0;
 logic [11:0] matriz [0:3][0:3];
 logic [11:0] matriz_in [0:3][0:3];
 
 //top top_(estado,mov,matriz_in,matriz);
 
-top top_(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,matriz_in,estado, mov,matriz);
+top #(16)top_(rst,clk, btn_izq,btn_der,btn_up,btn_down, start, fin,matriz_in,estado, mov,matriz);
 
 always #10 clk = ~clk;
 
@@ -47,8 +47,6 @@ btn_izq =0;
 btn_der=0;
 btn_up=0;
 btn_down =0;
-win =0;
-lose =0;
 fin =0;
 start =0;
 
@@ -59,8 +57,6 @@ btn_izq =0;
 btn_der=0;
 btn_up=0;
 btn_down =0;
-win =0;
-lose =0;
 fin =0;
 start =1;
 
@@ -71,8 +67,6 @@ btn_izq =1;
 btn_der=0;
 btn_up=0;
 btn_down =0;
-win =0;
-lose =0;
 fin =0;
 start =0;
 
@@ -83,8 +77,6 @@ btn_izq =1;
 btn_der=0;
 btn_up=0;
 btn_down =0;
-win =0;
-lose =0;
 fin =0;
 start =0;
 
@@ -95,9 +87,17 @@ btn_izq =0;
 btn_der=0;
 btn_up=0;
 btn_down =0;
-win =0;
-lose =0;
-fin =1;
+fin =0;
+start =0;
+
+#100
+
+rst =0;
+btn_izq =0;
+btn_der=1;
+btn_up=0;
+btn_down =0;
+fin =0;
 start =0;
 end
 

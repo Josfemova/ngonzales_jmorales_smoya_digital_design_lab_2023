@@ -4,18 +4,18 @@ output logic [3:0] estado_act,
 output logic [2:0] mov);
 
 typedef enum logic [3:0]{
-	START, 
-	GEN,
-	MERGE_MAT_1,
-	WAIT,
-	MOV,
-	MERGE_MAT_2,
-	UNIR,
-	MERGE_MAT_3,
-	FIN,
-	CLEAN_1,
-	CLEAN_2,
-	CLEAN_3
+	START, //0
+	GEN,//1
+	MERGE_MAT_1,//2
+	WAIT,//3
+	MOV,//4
+	MERGE_MAT_2,//5
+	UNIR,//6
+	MERGE_MAT_3,//7
+	FIN,//8
+	CLEAN_1,//9
+	CLEAN_2,//10
+	CLEAN_3//11
 } estado;
 
 estado sig_estado= START;
@@ -118,7 +118,7 @@ begin
 		end
 		CLEAN_3:
 		begin
-			if(win ==0 || lose ==0)
+			if(win ==1 || lose ==1)
 			begin
 				sig_estado <=FIN; 
 			end
