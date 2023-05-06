@@ -1,17 +1,26 @@
-module top #(parameter GOAL = 2048)(
+module juego_2048 #(parameter GOAL = 2048)(
 input logic rst,clk, btn_izq,btn_der,btn_up,btn_down, start, fin,
 output logic [3:0] estado,
 output logic [11:0] matriz [0:3][0:3],
-output logic [11:0] cont
+output logic [27:0] catodos
 );
 
 logic [11:0] matriz_in_aux [0:3][0:3] = '{default:0};
 logic [2:0] mov =0;
+logic [11:0]cont =0;
+logic [15:0] bcd;
+logic [27:0] catodo_aux;
+
+assign catodos = ~catodo_aux;
 
 
 maquina_estados maq(rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,estado, mov,cont);
 
 juego juego(estado,mov, matriz_in_aux,matriz);
+
+Bin2Bcd bcd_(cont,bcd);
+
+catodo_control cat_(bcd[3:0], bcd[7:4], bcd[11:8],bcd[15:12],catodo_aux);
 
 
 assign lose = ((matriz[0][0] !== matriz[0][1]) && (matriz[0][0] !== matriz[1][0]) && (matriz[0][1] !== matriz[1][1]) && (matriz[0][1] !== matriz[0][2]) &&(matriz[0][2] !== matriz[1][3]) &&

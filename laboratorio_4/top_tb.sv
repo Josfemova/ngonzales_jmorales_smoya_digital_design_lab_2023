@@ -3,11 +3,11 @@ logic [3:0] estado =0;
 logic rst, btn_izq,btn_der,btn_up,btn_down, start, fin;
 logic clk =0;
 logic [11:0] matriz [0:3][0:3];
-logic [11:0] cont;
+logic[27:0] catodo;
 
 //top top_(estado,mov,matriz_in,matriz);
 
-top #(16)top_(rst,clk, btn_izq,btn_der,btn_up,btn_down, start, fin,estado,matriz,cont);
+juego_2048 #(16)juego_2048_(rst,clk, btn_izq,btn_der,btn_up,btn_down, start, fin,estado,matriz,catodo);
 
 always #10 clk = ~clk;
 
