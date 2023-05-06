@@ -1,7 +1,8 @@
 module maquina_estados(
 input logic rst,clk, btn_izq,btn_der,btn_up,btn_down,win,lose, start, fin,
 output logic [3:0] estado_act,
-output logic [2:0] mov);
+output logic [2:0] mov,
+output logic [11:0] cont);
 
 typedef enum logic [3:0]{
 	START, //0
@@ -36,6 +37,7 @@ begin
 		START: 
 		begin// estado de inicio, espera hasta que haya una señal de comienzo 
 			mov <= 3'b000;
+			cont <= 0;
 			if(start ==1)
 			begin
 				sig_estado <= GEN;
@@ -83,6 +85,7 @@ begin
 		MOV:
 		begin
 			sig_estado <= MERGE_MAT_2;
+			cont <= cont +1;
 		end
 		MERGE_MAT_2: //Copia la matriz de output en la de input
 		begin
