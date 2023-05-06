@@ -4,8 +4,8 @@ module vga_driver(
     output video_on,    	// area de display
     output reg hsync,      // sincronizacion horizontal
     output reg vsync,      // sincronizacion vertical
-    output reg [9:0] x,    // posicion x del pixel, 0-799
-    output reg [9:0] y,    // posicion y del pixel, 0-524
+    output [9:0] x,    // posicion x del pixel, 0-799
+    output [9:0] y,    // posicion y del pixel, 0-524
 	 output sync, 				// sync simultaneo
 	 output blank	//señal de blank de dac VGA
     );
@@ -24,32 +24,33 @@ module vga_driver(
     parameter VMAX = V_DISPLAY+V_FRONT_PORCH+V_BACK_PORCH+V_PULSE-1; // max val = 524   
 
     // -------------------------------
-
+	 counter #(10) h_counter(.clk(clk), .reset(reset), .load(HMAX), .tc(htc), .q(x));
+	 counter #(10) v_counter(.clk(htc), .reset(reset), .load(VMAX), .tc(1'b0), .q(y));
+	 
+	 wire x_active, y_active, x_before_pulse, x_after_pulse, y_before_pulse, y_after_pulse;
+	 comparator #(10) comp_hd(.a(x), .b(H_DISPLAY), .le(x_active));
+	 comparator #(10) comp_vd(.a(y), .b(V_DISPLAY), .le(y_active));
+	 comparator #(10) comp_hsync1(.a(x), .b(H_DISPLAY + H_FRONT_PORCH), .le(x_before_pulse));
+	 comparator #(10) comp_hsync2(.a(x), .b(H_DISPLAY + H_FRONT_PORCH + H_PULSE), .ge(x_after_pulse));
+	 comparator #(10) comp_vsync1(.a(y), .b(V_DISPLAY + V_FRONT_PORCH), .le(y_before_pulse));
+	 comparator #(10) comp_vsync2(.a(y), .b(V_DISPLAY + V_FRONT_PORCH + V_PULSE), .ge(y_after_pulse));
+	 
+	 //or hs(hsync, x_before_pulse, x_after_pulse);
+	 //or vs(vsync, y_before_pulse, y_after_pulse);
+	 
 	 always @(posedge clk) begin   	 
         if(reset) begin
-            x <= 0;
-				y <= 0;
 				hsync <= 0;
 				vsync <= 0;
-        end else
-				//Contador horizontal
-            if(x == HMAX) begin               
-                x <= 0;
-					 // contador vertical
-					 if((y == VMAX))           
-                    y <= 0;
-                else
-                    y <= y + 1;
-            end else
-                x <= x + 1;         
-						  
+        end else begin
 				// sync solo es low en pulse
-				hsync <= ~ ((x >= H_DISPLAY + H_FRONT_PORCH) && (x <= H_DISPLAY+H_FRONT_PORCH+H_PULSE));
-				vsync <= ~ ((y >= V_DISPLAY + V_FRONT_PORCH) && (y <= V_DISPLAY+V_FRONT_PORCH+V_PULSE));
+				hsync <= x_before_pulse || x_after_pulse; 
+				vsync <= y_before_pulse || y_after_pulse;
+			end
 		end
-		
-    assign video_on = (x < H_DISPLAY) && (y < V_DISPLAY); // ambas coords se encuentran en area activa
+	
+	 and(video_on, x_active, y_active);
+	 and(blank, hsync, vsync);
 	 assign sync = 1'b_0 ;
-    assign blank = hsync & vsync;
             
 endmodule

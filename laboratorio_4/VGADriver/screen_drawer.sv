@@ -151,7 +151,7 @@ always_comb begin
 		`ifdef lowres
 			rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 2) + 25*((y-offset_y) >> 2)];
 		`else
-			rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 1) + 25*((y-offset_y) >> 1)];
+			rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 1) + 50*((y-offset_y) >> 1)];
 		`endif
 		else 
 			rgb_color = sprite_bg;
