@@ -3,7 +3,7 @@
 
 module screen_drawer(
 	input [9:0] x,y,
-	input [11:0] game_state [3:0][3:0],
+	input [11:0] game_state [0:3][0:3],
 	output reg [23:0] rgb_color
 );
 logic [11:0] sprite_val;

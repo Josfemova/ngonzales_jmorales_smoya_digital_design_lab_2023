@@ -2,8 +2,8 @@ module vga_driver(
     input clk,   				// clock 25Mhz
     input reset,        	// reset
     output video_on,    	// area de display
-    output reg hsync,      // sincronizacion horizontal
-    output reg vsync,      // sincronizacion vertical
+    output hsync,      // sincronizacion horizontal
+    output vsync,      // sincronizacion vertical
     output [9:0] x,    // posicion x del pixel, 0-799
     output [9:0] y,    // posicion y del pixel, 0-524
 	 output sync, 				// sync simultaneo
@@ -30,25 +30,13 @@ module vga_driver(
 	 wire x_active, y_active, x_before_pulse, x_after_pulse, y_before_pulse, y_after_pulse;
 	 comparator #(10) comp_hd(.a(x), .b(H_DISPLAY), .le(x_active));
 	 comparator #(10) comp_vd(.a(y), .b(V_DISPLAY), .le(y_active));
-	 comparator #(10) comp_hsync1(.a(x), .b(H_DISPLAY + H_FRONT_PORCH), .le(x_before_pulse));
-	 comparator #(10) comp_hsync2(.a(x), .b(H_DISPLAY + H_FRONT_PORCH + H_PULSE), .ge(x_after_pulse));
-	 comparator #(10) comp_vsync1(.a(y), .b(V_DISPLAY + V_FRONT_PORCH), .le(y_before_pulse));
-	 comparator #(10) comp_vsync2(.a(y), .b(V_DISPLAY + V_FRONT_PORCH + V_PULSE), .ge(y_after_pulse));
+	 comparator #(10) comp_hsync1(.a(x), .b(H_DISPLAY + H_FRONT_PORCH -1), .le(x_before_pulse));
+	 comparator #(10) comp_hsync2(.a(x), .b(H_DISPLAY + H_FRONT_PORCH + H_PULSE+1), .ge(x_after_pulse));
+	 comparator #(10) comp_vsync1(.a(y), .b(V_DISPLAY + V_FRONT_PORCH-1), .le(y_before_pulse));
+	 comparator #(10) comp_vsync2(.a(y), .b(V_DISPLAY + V_FRONT_PORCH + V_PULSE+1), .ge(y_after_pulse));
 	 
-	 //or hs(hsync, x_before_pulse, x_after_pulse);
-	 //or vs(vsync, y_before_pulse, y_after_pulse);
-	 
-	 always @(posedge clk) begin   	 
-        if(reset) begin
-				hsync <= 0;
-				vsync <= 0;
-        end else begin
-				// sync solo es low en pulse
-				hsync <= x_before_pulse || x_after_pulse; 
-				vsync <= y_before_pulse || y_after_pulse;
-			end
-		end
-	
+	 or hs(hsync, x_before_pulse, x_after_pulse);
+	 or vs(vsync, y_before_pulse, y_after_pulse);
 	 and(video_on, x_active, y_active);
 	 and(blank, hsync, vsync);
 	 assign sync = 1'b_0 ;
