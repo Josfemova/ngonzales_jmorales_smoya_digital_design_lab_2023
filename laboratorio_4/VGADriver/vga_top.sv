@@ -14,22 +14,19 @@ module vga_top(
 	
 
 	wire video_on;
-
+	wire [23:0] rgb_w;    
+	reg [9:0] current_x = 0;
+	reg [9:0] current_y = 0;
+	reg [9:0] next_x, next_y;
 	
-	wire [23:0] rgb_reg;    
-	reg [9:0] cx = 0;
-	reg [9:0] cy = 0;
-	reg [9:0] nx, ny;
+	
 	reg toggle = 1'b0;
 	reg [11:0] game_state[3:0][3:0];
-
-	 wire misc_clk, vga_clk,ssa, locked;
-	 // 25MHz clock
-	 pll_25 (clk_50MHz, reset, ssa, locked);
-	 clock_div #(.DIV(25000000)) divider(.clk_in(ssa), .clk_out(misc_clk));
-	 //assign vga_clk = rvga_clk;
-	 clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(vga_clk));
-	 //pll_25 (clk_50MHz, ~reset, vga_clock, locked);
+	wire misc_clk, clk_vga,ssa, locked;
+	 
+	 clock_div #(.DIV(25000000)) divider(.clk_in(clk_vga), .clk_out(misc_clk));
+	 clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_vga));
+	 assign p_tick = clk_vga;
 	 
 	 always @(posedge misc_clk) begin
 		if(toggle == 1'b0) 
@@ -41,27 +38,34 @@ module vga_top(
 	 end
 	 
     
-    xvga_driver vga_c(.vga_clk(vga_clk), .reset(reset), .hsync(hsync), .vsync(vsync),
-                        .video_on(video_on), .p_tick(p_tick), .x(nx), .y(ny), .sync(sync), .blank(blank));
+    vga_driver vga_c(
+			.clk(clk_vga), 
+			.reset(reset), 
+			.hsync(hsync), 
+			.vsync(vsync),
+			.video_on(video_on), 
+			.x(next_x), 
+			.y(next_y), 
+			.sync(sync), 
+			.blank(blank));
 	 
 	 screen_drawer sd(
-		 .x(cx),
-		 .y(cy),
+		 .x(current_x),
+		 .y(current_y),
 		 .game_state(game_state),
-		 .rgb_color(rgb_reg)
+		 .rgb_color(rgb_w)
 	 );
     
-    always @(posedge clk_50MHz or posedge reset) begin
+    always @(posedge clk_vga or posedge reset) begin
 		if (reset) begin
-			//rgb_reg <= 0;
-			cx <= 0;
-			cy <= 0;
+			current_x <= 0;
+			current_y <= 0;
 		end else begin
-			cx <= nx;
-			cy <= ny;
+			current_x <= next_x;
+			current_y <= next_y;
 		end
 	 end
 	 
-    assign rgb = (video_on) ? rgb_reg : 24'b0;   // while in display area RGB color = sw, else all OFF
+    assign rgb = (video_on) ? rgb_w : 24'b0;   // while in display area RGB color = sw, else all OFF
         
 endmodule
