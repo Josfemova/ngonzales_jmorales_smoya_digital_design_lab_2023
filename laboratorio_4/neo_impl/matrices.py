@@ -22,7 +22,6 @@ r = wu(m1)
 print(r[2])
 print(wu(r[2])[3])
 
-
 """
 reflejada (merge derecha)
 
