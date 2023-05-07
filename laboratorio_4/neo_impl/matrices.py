@@ -1,8 +1,12 @@
+
 m1 = [[1, 2, 3, 4],
       [1, 2, 3, 5],
       [1, 2, 3, 6],
       [1, 2, 3, 7]]
 
+def p(l):
+    print(*l, sep='\n')
+    print("\n")
 
 # refleja en y
 def wu(m):
@@ -12,15 +16,15 @@ def wu(m):
     mrara = [[0,0,0,0], [0,0,0,0],[0,0,0,0],[0,0,0,0]] # solo la inicia
     for i in range(0,4):
         for j in range(0,4):
-            mabajo[i][j] = m[j][i]
+            mabajo[i][3-j] = m[j][i]
             mderecha[i][j] = m[i][3-j]
             marriba[3-j][i] = m[i][j] 
             mrara[j][3-i] = m[i][j] 
     return [mabajo, mderecha, marriba, mrara];  
 
 r = wu(m1)
-print(r[2])
-print(wu(r[2])[3])
+p(r[2])
+p(wu(r[2])[0])
 
 """
 reflejada (merge derecha)

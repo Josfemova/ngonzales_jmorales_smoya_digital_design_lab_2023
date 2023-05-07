@@ -132,39 +132,37 @@ wire [17:0] sprite_offset;
 
 always_comb begin
 	sprite_offset = 0;
-	case(draw_state)
-		2'b00: begin
-			if(is_sprite == 1'b1) begin
-			case(sprite_val)		
-				4'd1  : sprite_offset = 000;
-				4'd2  : sprite_offset = `sprite_w * `sprite_w *1;
-				4'd3  : sprite_offset = `sprite_w * `sprite_w *2;
-				4'd4  : sprite_offset = `sprite_w * `sprite_w *3;
-				4'd5  : sprite_offset = `sprite_w * `sprite_w *4;
-				4'd6  : sprite_offset = `sprite_w * `sprite_w *5;
-				4'd7  : sprite_offset = `sprite_w * `sprite_w *6;
-				4'd8  : sprite_offset = `sprite_w * `sprite_w *7;
-				4'd9  : sprite_offset = `sprite_w * `sprite_w *8;
-				4'd10 : sprite_offset = `sprite_w * `sprite_w *9;
-				4'd11 : sprite_offset = `sprite_w * `sprite_w *10;
-				default: sprite_offset =   0000;
-			endcase
+		if(is_sprite == 1'b1) begin
+		case(sprite_val)		
+			4'd1  : sprite_offset = 000;
+			4'd2  : sprite_offset = `sprite_w * `sprite_w *1;
+			4'd3  : sprite_offset = `sprite_w * `sprite_w *2;
+			4'd4  : sprite_offset = `sprite_w * `sprite_w *3;
+			4'd5  : sprite_offset = `sprite_w * `sprite_w *4;
+			4'd6  : sprite_offset = `sprite_w * `sprite_w *5;
+			4'd7  : sprite_offset = `sprite_w * `sprite_w *6;
+			4'd8  : sprite_offset = `sprite_w * `sprite_w *7;
+			4'd9  : sprite_offset = `sprite_w * `sprite_w *8;
+			4'd10 : sprite_offset = `sprite_w * `sprite_w *9;
+			4'd11 : sprite_offset = `sprite_w * `sprite_w *10;
+			default: sprite_offset =   0000;
+		endcase
 
-				if(sprite_val != 12'd0)
-				`ifdef lowres
-					rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 2) + 25*((y-offset_y) >> 2)];
-				`else
-					rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 1) + 50*((y-offset_y) >> 1)];
-				`endif
-				else 
-					rgb_color = sprite_bg;
-			end
+			if(sprite_val != 12'd0)
+			`ifdef lowres
+				rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 2) + 25*((y-offset_y) >> 2)];
+			`else
+				rgb_color = sprite_sheet[sprite_offset + ((x-offset_x) >> 1) + 50*((y-offset_y) >> 1)];
+			`endif
 			else 
-				rgb_color = color_bg;
+				rgb_color = sprite_bg;
+		end else begin
+			case(draw_state)
+				2'b00 : rgb_color = color_bg;
+				2'b01 : rgb_color = 24'hff0000;
+				2'b10 : rgb_color = 24'h00ff00;
+				default: rgb_color = 24'h000000; 
+			endcase 
 		end
-		2'b01 : rgb_color = 24'hff0000;
-		2'b10 : rgb_color = 24'h00ff00;
-		default: rgb_color = 24'h000000; 
-	endcase 
 end
 endmodule

@@ -18,10 +18,19 @@ module neo_impl(
 	output logic [27:0] catodos
 );
 
-wire clk_25MHz, clk_juego, clk_debounce;
+wire clk_25MHz, clk_juego;
+
+pll_2048 pll(
+		.refclk(clk_50MHz),   //  refclk.clk
+		.rst(reset),      //   reset.reset
+		.outclk_0(clk_25MHz), // outclk0.clk
+		.outclk_1(0)  // outclk1.clk
+	);
+assign clk_juego = clk_25MHz;
+
+//clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_25MHz));
+//clock_div #(.DIV(2048)) dividerj(.clk_in(clk_50MHz), .clk_out(clk_juego));
 assign clk_vga = clk_25MHz;
-clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_25MHz));
-clock_div #(.DIV(5000)) dividerj(.clk_in(clk_50MHz), .clk_out(clk_juego));
 
 logic [3:0] gmatrix[0:3][0:3] = '{default:0}; // valor por casilla es potencia de 2
 logic [11:0] score;
@@ -41,13 +50,12 @@ gen_pulse btn3(.clk(clk_juego), .reset(reset), .btn(~botones[3]), .pulse(btn_dir
 
 juego_neo jg(
     .clk(clk_juego), 
-	 .reset(reset), 
+	.reset(reset), 
     .goal(meta),
     .dir(btn_dir),
-	 //.dir(~botones),
     .gmatrix(gmatrix),
     .score(score),
-	 .draw_state(draw_state)
+	.draw_state(draw_state)
 );
 
 	wire video_on;

@@ -7,6 +7,10 @@ module juego_neo(
     output draw_st draw_state
 );
 
+initial begin 
+    gmatrix = '{default:0};
+end 
+
 typedef enum logic [1:0]{
     DRAW_ACTIVE = 2'b00,
     DRAW_WIN = 2'b01,
@@ -64,11 +68,9 @@ randn_gen #(.WIDTH(3), .OPTIONS(4)) randrow(
 wire lose_condition;
 wire [3:0] z0,z1,z2,z3,ma,mb,mc;
 wire [3:0] win_condition;
-wire [3:0] gmatrix_izquierda [0:3][0:3];
-wire [3:0] gmatrix_abajo [0:3][0:3];
-wire [3:0] gmatrix_arriba [0:3][0:3];
-wire [3:0] gmatrix_derecha [0:3][0:3];
-wire [3:0] gmatrix_arriba_detrans [0:3][0:3]; //transpuesta reflejada
+wire [3:0] gmatrix_rot90der [0:3][0:3];
+wire [3:0] gmatrix_rot90izq [0:3][0:3];
+wire [3:0] gmatrix_h_flipped [0:3][0:3];
 
 genvar i,j;
 generate 
@@ -81,9 +83,9 @@ generate
         assign z3[i] = gmatrix_aux[i][3] == 0;
         
         // condiciones para merge
-        assign ma[i] = ~z0[i] && (gmatrix_aux[i][0] == gmatrix_aux[i][1]);
-        assign mb[i] = ~z2[i] && (gmatrix_aux[i][2] == gmatrix_aux[i][3]);
-        assign mc[i] = ~z1[i] && (gmatrix_aux[i][1] == gmatrix_aux[i][2]);
+        assign ma[i] = (~z0[i]) && (gmatrix_aux[i][0] == gmatrix_aux[i][1]);
+        assign mb[i] = (~z2[i]) && (gmatrix_aux[i][2] == gmatrix_aux[i][3]);
+        assign mc[i] = (~z1[i]) && (gmatrix_aux[i][1] == gmatrix_aux[i][2]);
 
         // detectores de 2048
         assign win_condition[i] = gmatrix_aux[i][0] == goal 
@@ -92,13 +94,12 @@ generate
             || gmatrix_aux[i][3] == goal;
 
         for(j=0; j<4; j = j+1) begin : generate_matrices
-            assign gmatrix_izquierda[i][j] = gmatrix_proxy[i][j];
-            // rotacion +90° (hacia la izquierda)
-            assign gmatrix_arriba[3-j][i] = gmatrix_proxy[i][j]; 
-            assign gmatrix_arriba_detrans[j][3-i] = gmatrix_proxy[i][j]; 
             // rotacion -90° (hacia la derecha)
-            assign gmatrix_abajo[i][j] = gmatrix_proxy[j][i];
-            assign gmatrix_derecha[i][j] = gmatrix_proxy[i][3-j];
+            assign gmatrix_rot90der[i][3-j] = gmatrix_proxy[j][i];
+            // rotación de 180°
+            assign gmatrix_h_flipped[i][j] = gmatrix_proxy[i][3-j];
+            // rotacion +90° (hacia la izquierda)
+            assign gmatrix_rot90izq[3-j][i] = gmatrix_proxy[i][j]; 
         end 
     end
 endgenerate 
@@ -106,7 +107,7 @@ endgenerate
 assign lose_condition = // primero vemos si ningun adyacente es igual
               ((gmatrix_aux[0][0] !== gmatrix_aux[0][1]) && (gmatrix_aux[0][0] !== gmatrix_aux[1][0]) 
             && (gmatrix_aux[0][1] !== gmatrix_aux[1][1]) && (gmatrix_aux[0][1] !== gmatrix_aux[0][2]) 
-            && (gmatrix_aux[0][2] !== gmatrix_aux[1][3]) && (gmatrix_aux[0][2] !== gmatrix_aux[0][3]) 
+            && (gmatrix_aux[0][2] !== gmatrix_aux[1][2]) && (gmatrix_aux[0][2] !== gmatrix_aux[0][3]) 
             && (gmatrix_aux[0][3] !== gmatrix_aux[1][3]) && (gmatrix_aux[1][0] !== gmatrix_aux[1][1]) 
             && (gmatrix_aux[1][0] !== gmatrix_aux[2][0]) && (gmatrix_aux[1][1] !== gmatrix_aux[1][2]) 
             && (gmatrix_aux[1][1] !== gmatrix_aux[2][1]) && (gmatrix_aux[1][2] !== gmatrix_aux[1][3]) 
@@ -140,7 +141,6 @@ always @(posedge clk) begin
                 shifted <= 4'b1; //para que GEN genere algo
                 last_dir <= IZQUIERDA;
                 merged <= 4'b0; //no queremos sumar puntos
-                //estado_act <= GEN;
             end
             GEN: begin
                 if((shifted != 4'b0) || (merged != 4'b0)) begin
@@ -152,70 +152,56 @@ always @(posedge clk) begin
                     // NO se está en estado de pérdida
                     if (z0[row]) begin 
                         gmatrix_aux[row][0] <= n2o4;
-                        //estado_act <= DETRANS;
                     end else if(z1[row]) begin 
                         gmatrix_aux[row][1] <= n2o4;
-                        //estado_act <= DETRANS;
                     end else if(z2[row]) begin 
                         gmatrix_aux[row][2] <= n2o4;
-                        //estado_act <= DETRANS;
                     end else if(z3[row]) begin 
                         gmatrix_aux[row][3] <= n2o4;
-                        //estado_act <= DETRANS;
                     end else begin 
-                        //estado_act <= GEN;
                         // Si no se encontró un 0 no se cambia de estado
                     end
                 end else begin 
-                    //estado_act <= WAIT_INPUT;
                 end 
             end
             DETRANS: begin 
                 // cambiar la matriz a la cual se le sacan todas las rotaciones
                 gmatrix_proxy <= gmatrix_aux;
-                //estado_act <= SHOW_M;
             end
             SHOW_M: begin 
                 // selecciona la rotacion correcta dependiendo de la direccion
                 // del ultimo movimiento
                 case (last_dir)
-                    IZQUIERDA: begin
-                        gmatrix <= gmatrix_izquierda;
-                        gmatrix_aux <= gmatrix_izquierda;
-                     end
                     ARRIBA   : begin
-                        gmatrix <= gmatrix_arriba_detrans;
-                        gmatrix_aux <= gmatrix_arriba_detrans;
+                        // se rotó antes 90 izq, ahora se rota alverez
+                        gmatrix <= gmatrix_rot90der;
+                        gmatrix_aux <= gmatrix_rot90der;
                      end
                     ABAJO    : begin
-                        gmatrix <= gmatrix_abajo;
-                        gmatrix_aux <= gmatrix_abajo;
+                        // se rotó antes 90 der, ahora se rota alverez
+                        gmatrix <= gmatrix_rot90izq;
+                        gmatrix_aux <= gmatrix_rot90izq;
                      end
                     DERECHA  : begin
-                        gmatrix <= gmatrix_derecha;
-                        gmatrix_aux <= gmatrix_derecha;
+                        gmatrix <= gmatrix_h_flipped;
+                        gmatrix_aux <= gmatrix_h_flipped;
                      end
-                     default: begin
-                        // no es un caso que se de
+                    default: begin
+                        // cubre caso de la izquierda
                         gmatrix <= gmatrix_proxy;
                         gmatrix_aux <= gmatrix_proxy;
                      end
                 endcase
-                //estado_act <= CHECK_WIN;
             end
             CHECK_WIN: begin
                 if(win_condition != 0) begin
-                    //estado_act <= WIN;
                 end else begin
-                    //estado_act <= CHECK_LOSE;
                 end
                 gmatrix_proxy <= gmatrix;
             end
             CHECK_LOSE: begin 
                 if(lose_condition != 0) begin
-                    //estado_act <= LOSE;
                 end else begin
-                    //estado_act <= WAIT_INPUT;
                 end
             end
             WAIT_INPUT: begin 
@@ -223,27 +209,22 @@ always @(posedge clk) begin
                 case (dir)
                     IZQUIERDA: begin
                         last_dir <= IZQUIERDA;
-                        gmatrix_aux <= gmatrix_izquierda;
-                        //estado_act <= SHIFT;
+                        gmatrix_aux <= gmatrix_proxy;
                      end
                     ARRIBA   : begin
                         last_dir <= ARRIBA;
-                        gmatrix_aux <= gmatrix_arriba;
-                        //estado_act <= SHIFT;
+                        gmatrix_aux <= gmatrix_rot90izq;
                      end
                     ABAJO    : begin
                         last_dir <= ABAJO;
-                        gmatrix_aux <= gmatrix_abajo;
-                        //estado_act <= SHIFT;
+                        gmatrix_aux <= gmatrix_rot90der;
                      end
                     DERECHA  : begin
                         last_dir <= DERECHA;
-                        gmatrix_aux <= gmatrix_derecha;
-                        //estado_act <= SHIFT;
+                        gmatrix_aux <= gmatrix_h_flipped;
                      end
                     default: begin
                         last_dir <= NONE;
-                        //estado_act <= WAIT_INPUT;
                     end
                 endcase
             end
@@ -309,8 +290,6 @@ always @(posedge clk) begin
                         end
                     end 
                 end
-                //estado_act <= MERGE;
-
             end
             MERGE: begin 
                 // ejecuta algoritmo de merge
@@ -326,19 +305,21 @@ always @(posedge clk) begin
                             gmatrix_aux[i][2] <= 0;
                         end else begin
                             // [2,2,0,4]
+                            // [2,2,8,4]
                             row_points[i] <= 1;
-                            gmatrix_aux[i][1] <= gmatrix_aux[i][2];
-                            gmatrix_aux[i][2] <= gmatrix_aux[i][3];
+                            gmatrix_aux[i][1] <= z2[i] ? gmatrix_aux[i][3] : gmatrix_aux[i][2];
+                            gmatrix_aux[i][2] <= z2[i] ? 0 : gmatrix_aux[i][3];
                         end
                      end else begin
                         if (mc[i] == 1'b1) begin //condicion merge 1,2 
                             // [4,2,2,4]
+                            // [16,2,2,0]
                             merged[i] <= 1'b1;
                             row_points[i] <= 1;
                             gmatrix_aux[i][1] <= gmatrix_aux[i][1] + 1;
                             gmatrix_aux[i][2] <= gmatrix_aux[i][3];
                             gmatrix_aux[i][3] <= 0;
-                        end else if (mb[i] == 1'b1) begin //condicion merge 1,2 
+                        end else if (mb[i] == 1'b1) begin //condicion merge 2,3 
                             // [4,8,4,4]
                             merged[i] <= 1'b1;
                             row_points[i] <= 1;
@@ -349,19 +330,15 @@ always @(posedge clk) begin
                             merged[i] <= 1'b0;
                      end
                 end
-                //estado_act <= GEN;
             end
             WIN: begin 
                 // no hay transición
-                //estado_act <= START;
             end 
             LOSE: begin 
                 // no hay transición
-                //estado_act <= START;
             end 
             default: begin 
                 // no hay transición
-                //estado_act <= START;
             end 
         endcase
         estado_act <= estado_sig;
@@ -392,7 +369,7 @@ always_comb begin
                 endcase
             end
             DEBOUNCE: begin 
-                estado_sig = (dir == 0) ? MERGE : DEBOUNCE;
+                estado_sig = (dir == 0) ? SHIFT : DEBOUNCE;
             end 
             SHIFT:estado_sig = MERGE;
             MERGE:estado_sig = GEN;
