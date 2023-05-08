@@ -11,7 +11,8 @@ always #2 clk = ~clk;
 
 juego_neo jg(
     .clk(clk), 
-	 .reset(reset), 
+	.reset(reset), 
+	.restart(1'b0), 
     .goal(meta),
     .dir(dir),
     .gmatrix(gmatrix),
