@@ -1,5 +1,5 @@
 module juego_neo(
-    input clk, reset, 
+    input clk, reset, restart,
     input [3:0] goal,
     input [3:0] dir, //codificado one-hot
     output reg [3:0] gmatrix[0:3][0:3], // valor por casilla es potencia de 2
@@ -29,6 +29,7 @@ typedef enum logic [3:0]{
 
 typedef enum logic [3:0]{
 	START,
+    GEN_START, //genera 2 veces 2
     GEN, 
     DETRANS,
     SHOW_M, //matriz salida a detrans
@@ -48,7 +49,9 @@ direccion last_dir;
 
 reg [3:0] gmatrix_proxy[0:3][0:3];
 reg [3:0] gmatrix_aux[0:3][0:3];
-reg [3:0] shifted, merged;
+reg [3:0] shifted;
+reg [3:0] merged;
+reg [3:0] start_blocks; 
 reg [12:0] row_points [0:3]; // puntos por fila, se suman al final
 
 wire [3:0] n2o4;
@@ -64,6 +67,13 @@ randn_gen #(.WIDTH(3), .OPTIONS(4)) randrow(
     .reset(reset), 
     .options('{0,1,2,3}), 
     .number(row));
+
+wire [2:0] col;
+randn_gen #(.WIDTH(3), .OPTIONS(4)) randcol(
+    .clk(clk), 
+    .reset(reset), 
+    .options('{3,0,2,1}), 
+    .number(col));
 
 wire lose_condition;
 wire [3:0] z0,z1,z2,z3,ma,mb,mc;
@@ -141,6 +151,13 @@ always @(posedge clk) begin
                 shifted <= 4'b1; //para que GEN genere algo
                 last_dir <= IZQUIERDA;
                 merged <= 4'b0; //no queremos sumar puntos
+                start_blocks <= 2;
+            end
+            GEN_START: begin 
+                if ((gmatrix_aux[row][col] == 0) && (start_blocks != 0)) begin 
+                    gmatrix_aux[row][col] <= 1;
+                    start_blocks <= start_blocks - 1;
+                end
             end
             GEN: begin
                 if((shifted != 4'b0) || (merged != 4'b0)) begin
@@ -282,7 +299,7 @@ always @(posedge clk) begin
                         end else begin 
                             if(z2[i]) begin
                                 //[2,2,0,x] 
-                                gmatrix_aux[i][2] <= gmatrix[i][3];
+                                gmatrix_aux[i][2] <= gmatrix_aux[i][3];
                                 gmatrix_aux[i][3] <= 0;
                                 if(z3[i]) shifted[i] <= 1'b0;
                                 else shifted[i] <= 1'b1;
@@ -333,9 +350,10 @@ always @(posedge clk) begin
                             row_points[i] <= 1;
                             gmatrix_aux[i][2] <= gmatrix_aux[i][2]+1;
                             gmatrix_aux[i][3] <= 0;
-                        end else 
+                        end else begin
                             row_points[i] <= 0;
                             merged[i] <= 1'b0;
+                        end
                      end
                 end
             end
@@ -356,10 +374,16 @@ end
 //logica estado siguiente
 always_comb begin
         case(estado_act)
-            START: estado_sig = GEN;
+            START: begin 
+                estado_sig = GEN_START;
+            end
+            GEN_START: begin 
+                if((z0[row] || z1[row] || z2[row] || z3[row]) && (start_blocks == 0)) estado_sig = DETRANS;
+                else estado_sig = GEN_START;
+            end
             GEN: begin
                 if((shifted != 4'b0) || (merged != 4'b0)) begin
-                    if(z0[row] || z1[row] || z2[row] || z3[row]) estado_sig = DETRANS;
+                    if((z0[row] || z1[row] || z2[row] || z3[row])) estado_sig = DETRANS;
                     else estado_sig = GEN;
                 end else estado_sig = WAIT_INPUT;
             end
@@ -392,7 +416,7 @@ always_comb begin
             LOSE: estado_sig = LOSE;
             default: estado_sig = START;
         endcase
-
+        if(restart) estado_sig = START;
 end
 
 //logica salida

@@ -1,6 +1,7 @@
 module neo_impl(
 	input clk_50MHz,      
-	input reset,    
+	input reset,
+	input restart,    
 	input [3:0] botones, 
 	input [3:0] meta,
 	
@@ -51,7 +52,8 @@ gen_pulse btn3(.clk(clk_juego), .reset(reset), .btn(~botones[3]), .pulse(btn_dir
 
 juego_neo jg(
     .clk(clk_juego), 
-	.reset(reset), 
+	.reset(reset),
+	.restart(restart),
     .goal(meta),
     .dir(btn_dir),
     .gmatrix(gmatrix),
