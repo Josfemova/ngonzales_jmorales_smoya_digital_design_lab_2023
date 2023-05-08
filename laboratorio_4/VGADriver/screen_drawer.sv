@@ -9,6 +9,7 @@ module screen_drawer(
 );
 logic [11:0] sprite_val;
 logic is_sprite;
+logic [17:0] sprite_offset;
 logic [9:0] offset_x, offset_y;
 
 parameter sprite_bg = 24'hf7e1b2;
@@ -128,8 +129,6 @@ always_comb begin
 	 else
 		is_sprite = 1'b0;
 end
-
-wire [17:0] sprite_offset;
 
 always_comb begin
 	sprite_offset = 0;

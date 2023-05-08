@@ -4,7 +4,7 @@ module juego_neo(
     input [3:0] dir, //codificado one-hot
     output reg [3:0] gmatrix[0:3][0:3], // valor por casilla es potencia de 2
     output reg [11:0] score,
-    output draw_st draw_state
+    output logic [1:0] draw_state
 );
 
 initial begin 
@@ -237,7 +237,8 @@ always @(posedge clk) begin
                                 //[0,0,0,x] 
                                 gmatrix_aux[i][0] <= gmatrix_aux[i][3];
                                 gmatrix_aux[i][3] <= 0;
-                                shifted[i] <= (z3[i]) ? 1'b0 : 1'b1;
+                                if(z3[i]) shifted[i] <= 1'b0;
+                                else shifted[i] <= 1'b1;
                             end else begin
                                 //[0,0,2,x] 
                                 gmatrix_aux[i][0] <= gmatrix_aux[i][2];
@@ -269,7 +270,8 @@ always @(posedge clk) begin
                                 //[2,0,0,x] 
                                 gmatrix_aux[i][1] <= gmatrix_aux[i][3];
                                 gmatrix_aux[i][3] <= 0;
-                                shifted[i] <= (z3[i]) ? 1'b0 : 1'b1;
+                                if(z3[i]) shifted[i] <= 1'b0;
+                                else shifted[i] <= 1'b1;
                             end else begin
                                 //[2,0,2,x] 
                                 gmatrix_aux[i][1] <= gmatrix_aux[i][2];
@@ -282,7 +284,8 @@ always @(posedge clk) begin
                                 //[2,2,0,x] 
                                 gmatrix_aux[i][2] <= gmatrix[i][3];
                                 gmatrix_aux[i][3] <= 0;
-                                shifted[i] <= (z3[i]) ? 1'b0 : 1'b1;
+                                if(z3[i]) shifted[i] <= 1'b0;
+                                else shifted[i] <= 1'b1;
                             end else begin 
                                 //[2,2,2,x]
                                 shifted[i] <= 1'b0;
@@ -307,8 +310,13 @@ always @(posedge clk) begin
                             // [2,2,0,4]
                             // [2,2,8,4]
                             row_points[i] <= 1;
-                            gmatrix_aux[i][1] <= z2[i] ? gmatrix_aux[i][3] : gmatrix_aux[i][2];
-                            gmatrix_aux[i][2] <= z2[i] ? 0 : gmatrix_aux[i][3];
+                            if (z2[i]) begin 
+                                gmatrix_aux[i][1] <= gmatrix_aux[i][3];
+                                gmatrix_aux[i][2] <= 0;
+                            end else begin 
+                                gmatrix_aux[i][1] <= gmatrix_aux[i][2];
+                                gmatrix_aux[i][2] <= gmatrix_aux[i][3];
+                            end
                         end
                      end else begin
                         if (mc[i] == 1'b1) begin //condicion merge 1,2 
@@ -357,8 +365,14 @@ always_comb begin
             end
             DETRANS: estado_sig = SHOW_M;
             SHOW_M: estado_sig = CHECK_WIN;
-            CHECK_WIN: estado_sig = (win_condition == 0) ? CHECK_LOSE : WIN;
-            CHECK_LOSE: estado_sig = (lose_condition == 0) ? WAIT_INPUT : LOSE;
+            CHECK_WIN: begin 
+                if(win_condition == 0) estado_sig = CHECK_LOSE;
+                else estado_sig = WIN;
+            end
+            CHECK_LOSE: begin 
+                if(lose_condition == 0) estado_sig = WAIT_INPUT;
+                else estado_sig = LOSE;
+            end
             WAIT_INPUT: begin 
                 case (dir)
                     IZQUIERDA: estado_sig = DEBOUNCE;
@@ -369,7 +383,8 @@ always_comb begin
                 endcase
             end
             DEBOUNCE: begin 
-                estado_sig = (dir == 0) ? SHIFT : DEBOUNCE;
+                if(dir == 0) estado_sig = SHIFT;
+                else estado_sig = DEBOUNCE;
             end 
             SHIFT:estado_sig = MERGE;
             MERGE:estado_sig = GEN;

@@ -2,8 +2,8 @@ module vga_driver(
     input clk,   				// clock 25Mhz
     input reset,        	// reset
     output video_on,    	// area de display
-    output hsync,      // sincronizacion horizontal
-    output vsync,      // sincronizacion vertical
+    output logic hsync,      // sincronizacion horizontal
+    output logic vsync,      // sincronizacion vertical
     output [9:0] x,    // posicion x del pixel, 0-799
     output [9:0] y,    // posicion y del pixel, 0-524
 	 output sync, 				// sync simultaneo
