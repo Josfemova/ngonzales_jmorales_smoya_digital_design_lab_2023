@@ -1,6 +1,6 @@
 module juego_neo(
     input clk, reset, 
-    input [4:0] goal,
+    input [3:0] goal,
     input [3:0] dir, //codificado one-hot
     output reg [3:0] gmatrix[0:3][0:3], // valor por casilla es potencia de 2
     output reg [11:0] score,
