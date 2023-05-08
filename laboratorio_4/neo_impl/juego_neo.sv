@@ -47,6 +47,7 @@ estado estado_act = START;
 estado estado_sig; 
 direccion last_dir;
 
+reg [3:0] goal_reg;
 reg [3:0] gmatrix_proxy[0:3][0:3];
 reg [3:0] gmatrix_aux[0:3][0:3];
 reg [3:0] shifted;
@@ -101,10 +102,10 @@ generate
         assign mc[i] = (~z1[i]) && (gmatrix_aux[i][1] == gmatrix_aux[i][2]);
 
         // detectores de 2048
-        assign win_condition[i] = gmatrix_aux[i][0] == goal 
-            || gmatrix_aux[i][1] == goal
-            || gmatrix_aux[i][2] == goal
-            || gmatrix_aux[i][3] == goal;
+        assign win_condition[i] = gmatrix_aux[i][0] == goal_reg 
+            || gmatrix_aux[i][1] == goal_reg
+            || gmatrix_aux[i][2] == goal_reg
+            || gmatrix_aux[i][3] == goal_reg;
 
         for(j=0; j<4; j = j+1) begin : generate_matrices
             // rotacion -90° (hacia la derecha)
@@ -150,6 +151,7 @@ always @(posedge clk) begin
                 gmatrix <= '{default:0};
                 gmatrix_proxy <= '{default:0};
                 gmatrix_aux <= '{default:0};
+                goal_reg <= goal;
                 score <= 0;
                 shifted <= 4'b1; //para que GEN genere algo
                 last_dir <= IZQUIERDA;
