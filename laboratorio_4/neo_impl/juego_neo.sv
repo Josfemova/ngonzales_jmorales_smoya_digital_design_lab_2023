@@ -61,18 +61,21 @@ randn_gen #(.WIDTH(4), .OPTIONS(2)) randx(
     .options('{1,2}), 
     .number(n2o4));
 
+// 17 opciones porque al ser un numero primo, siempre 
+// se va a recorrer todas las opciones sean la cantidad 
+// de ciclos entre cada GEN par o impar
 wire [2:0] row;
-randn_gen #(.WIDTH(3), .OPTIONS(4)) randrow(
+randn_gen #(.WIDTH(3), .OPTIONS(17)) randrow(
     .clk(clk), 
     .reset(reset), 
-    .options('{0,1,2,3}), 
+    .options('{0,1,2,3,1,0,2,3,2,3,0,1,3,2,1,0,3}), 
     .number(row));
 
 wire [2:0] col;
-randn_gen #(.WIDTH(3), .OPTIONS(4)) randcol(
+randn_gen #(.WIDTH(3), .OPTIONS(17)) randcol(
     .clk(clk), 
     .reset(reset), 
-    .options('{3,0,2,1}), 
+    .options('{3,0,2,1,3,2,1,0,0,2,1,2,3,3,1,0,1}), 
     .number(col));
 
 wire lose_condition;
@@ -167,16 +170,8 @@ always @(posedge clk) begin
                     end
                     // Cuando se llega a GEN sabemos que 
                     // NO se está en estado de pérdida
-                    if (z0[row]) begin 
-                        gmatrix_aux[row][0] <= n2o4;
-                    end else if(z1[row]) begin 
-                        gmatrix_aux[row][1] <= n2o4;
-                    end else if(z2[row]) begin 
-                        gmatrix_aux[row][2] <= n2o4;
-                    end else if(z3[row]) begin 
-                        gmatrix_aux[row][3] <= n2o4;
-                    end else begin 
-                        // Si no se encontró un 0 no se cambia de estado
+                    if (gmatrix_aux[row][col] == 0) begin 
+                        gmatrix_aux[row][col] <= n2o4;
                     end
                 end else begin 
                 end 
@@ -378,12 +373,12 @@ always_comb begin
                 estado_sig = GEN_START;
             end
             GEN_START: begin 
-                if((z0[row] || z1[row] || z2[row] || z3[row]) && (start_blocks == 0)) estado_sig = DETRANS;
+                if(start_blocks == 0) estado_sig = DETRANS;
                 else estado_sig = GEN_START;
             end
             GEN: begin
-                if((shifted != 4'b0) || (merged != 4'b0)) begin
-                    if((z0[row] || z1[row] || z2[row] || z3[row])) estado_sig = DETRANS;
+                if ((shifted != 4'b0) || (merged != 4'b0)) begin
+                if (gmatrix_aux[row][col] == 0) estado_sig = DETRANS;
                     else estado_sig = GEN;
                 end else estado_sig = WAIT_INPUT;
             end
