@@ -361,10 +361,10 @@ always_comb begin
             CHECK_LOSE: estado_sig = (lose_condition == 0) ? WAIT_INPUT : LOSE;
             WAIT_INPUT: begin 
                 case (dir)
-                    IZQUIERDA: estado_sig = SHIFT;
-                    ARRIBA   : estado_sig = SHIFT;
-                    ABAJO    : estado_sig = SHIFT;
-                    DERECHA  : estado_sig = SHIFT;
+                    IZQUIERDA: estado_sig = DEBOUNCE;
+                    ARRIBA   : estado_sig = DEBOUNCE;
+                    ABAJO    : estado_sig = DEBOUNCE;
+                    DERECHA  : estado_sig = DEBOUNCE;
                     default  : estado_sig = WAIT_INPUT;
                 endcase
             end

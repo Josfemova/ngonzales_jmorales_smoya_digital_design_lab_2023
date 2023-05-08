@@ -14,14 +14,15 @@ logic [9:0] offset_x, offset_y;
 parameter sprite_bg = 24'hf7e1b2;
 parameter color_bg = 24'hf2e3c4;
 
-
 reg [23:0] sprite_sheet[(`sprite_w*`sprite_w * 12)-1:0];
+reg [23:0] sprite_msgs[(25*100*2)-1:0];
 initial begin
 	`ifdef lowres
 	$readmemh("sprite_sheet25x25.txt", sprite_sheet);
 	`else
 	$readmemh("sprite_sheet50x50.txt", sprite_sheet);
 	`endif
+	$readmemh("sprite_msgs.txt", sprite_msgs);
 end
 
 // always para detectar caso
@@ -159,8 +160,18 @@ always_comb begin
 		end else begin
 			case(draw_state)
 				2'b00 : rgb_color = color_bg;
-				2'b01 : rgb_color = 24'hff0000;
-				2'b10 : rgb_color = 24'h00ff00;
+				2'b01 : begin //win
+					if(x > 2 && x<102 && y > 40 && y < 440) 
+						rgb_color = sprite_msgs[((x-3) >> 2) + 25*((y-41) >> 2)];
+					else 
+						rgb_color = color_bg;
+				end
+				2'b10 : begin //lose
+					if(x > 2 && x<102 && y > 40 && y < 440) 
+						rgb_color = sprite_msgs[(100*25) + ((x-3) >> 2) + 25*((y-41) >> 2)];
+					else 
+						rgb_color = color_bg;
+				end
 				default: rgb_color = 24'h000000; 
 			endcase 
 		end

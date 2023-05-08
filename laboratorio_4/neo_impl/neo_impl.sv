@@ -20,16 +20,17 @@ module neo_impl(
 
 wire clk_25MHz, clk_juego;
 
-pll_2048 pll(
+/*pll_2048 pll(
 		.refclk(clk_50MHz),   //  refclk.clk
 		.rst(reset),      //   reset.reset
 		.outclk_0(clk_25MHz), // outclk0.clk
 		.outclk_1(0)  // outclk1.clk
-	);
-assign clk_juego = clk_25MHz;
+	);*/
 
-//clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_25MHz));
+
+clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_25MHz));
 //clock_div #(.DIV(2048)) dividerj(.clk_in(clk_50MHz), .clk_out(clk_juego));
+assign clk_juego = clk_25MHz;
 assign clk_vga = clk_25MHz;
 
 logic [3:0] gmatrix[0:3][0:3] = '{default:0}; // valor por casilla es potencia de 2

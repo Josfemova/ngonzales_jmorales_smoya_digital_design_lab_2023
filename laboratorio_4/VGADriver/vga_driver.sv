@@ -25,8 +25,8 @@ module vga_driver(
 
     // -------------------------------
 	 wire htc;
-	 counter #(10) h_counter(.clk(clk), .reset(reset), .load(HMAX), .tc(htc), .q(x));
-	 counter #(10) v_counter(.clk(htc), .reset(reset), .load(VMAX), .tc(1'b0), .q(y));
+	 counter #(10) h_counter(.clk(clk), .enable(1'b1), .reset(reset), .load(HMAX), .tc(htc), .q(x));
+	 counter #(10) v_counter(.clk(clk), .enable(htc), .reset(reset), .load(VMAX), .tc(1'b0), .q(y));
 	 
 	 wire x_active, y_active, x_before_pulse, x_after_pulse, y_before_pulse, y_after_pulse;
 	 comparator #(10) comp_hd(.a(x), .b(H_DISPLAY), .le(x_active));
