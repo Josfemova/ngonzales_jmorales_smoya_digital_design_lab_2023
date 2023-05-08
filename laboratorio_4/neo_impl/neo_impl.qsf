@@ -140,8 +140,6 @@ set_location_assignment PIN_AE12 -to meta[3]
 set_location_assignment PIN_AE11 -to meta[0]
 set_location_assignment PIN_AC9 -to meta[1]
 set_location_assignment PIN_AD10 -to meta[2]
-set_global_assignment -name QIP_FILE pll_2048.qip
-set_global_assignment -name SIP_FILE pll_2048.sip
 set_global_assignment -name SYSTEMVERILOG_FILE juego_tb.sv
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
 set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH juego_tb -section_id eda_simulation
