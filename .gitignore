@@ -30,4 +30,4 @@ obj
 *.swp
 *.a
 nios_workspace
-
+build
