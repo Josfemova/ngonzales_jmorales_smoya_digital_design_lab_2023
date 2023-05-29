@@ -1,4 +1,4 @@
-module register_file(input logic [3:0] A1,
+module regfile(input logic [3:0] A1,
 							input logic [3:0] A2,
 							input logic [3:0] A3,
 							input logic [31:0] WD3,
