@@ -1,30 +1,30 @@
 ENTRY(_start)
 
-/*Como la memoria está separada RAM y ROM inician en 0*/
+/*Como la memoria está separada inician en 0 porque son memorias distintas*/
 MEMORY
 {
-    ROM (rx) : ORIGIN = 0x00000000, LENGTH = 4K
-    RAM (rwx) : ORIGIN = 0x00000000, LENGTH = 1K
+    /* Programa */
+    INSTR_MEM (rx) : ORIGIN = 0x00000, LENGTH = 4K
+    /* Imagen cargada */
+    ROM (r) : ORIGIN = 0x80000, LENGTH = 1K
+    /* Region para tablas de frecuencia acumulada */
+    /* 10*256 bytes para armar la tabla del ecualizador*/
+    DATA_TABLE (rw) : ORIGIN = ORIGIN(ROM) + LENGTH(ROM), LENGTH = 1K
+    /* Imagen que se muestra por VGA */
+    IMAGE_RES (rw) : ORIGIN = ORIGIN(DATA_TABLE) + LENGTH(DATA_TABLE), LENGTH = 1K
 }
-
-REGION_ALIAS("REGION_TEXT", ROM);
-REGION_ALIAS("REGION_RODATA", ROM);
-REGION_ALIAS("REGION_DATA", RAM);
-REGION_ALIAS("REGION_BSS", RAM);
-REGION_ALIAS("REGION_HEAP", RAM);
-REGION_ALIAS("REGION_STACK", RAM);
 
 SECTIONS
 {
   .text : 
   {
     *(.text .text.*);
-  } > REGION_TEXT
-
-  .rodata : ALIGN(4)
-  {
-    *(.srodata .srodata.*);
-    *(.rodata .rodata.*);
-    . = ALIGN(4);
-  } > REGION_RODATA
+  } > INSTR_MEM
 }
+
+PROVIDE(__image_r_start = ORIGIN(ROM));
+PROVIDE(__image_r_end = ORIGIN(ROM) + LENGTH(ROM));
+PROVIDE(__data_table_start = ORIGIN(DATA_TABLE));
+PROVIDE(__data_table_end = ORIGIN(DATA_TABLE) + LENGTH(DATA_TABLE));
+PROVIDE(__image_w_start = ORIGIN(IMAGE_RES));
+PROVIDE(__image_w_end = ORIGIN(IMAGE_RES) + LENGTH(IMAGE_RES));
