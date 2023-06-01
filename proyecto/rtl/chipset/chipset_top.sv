@@ -51,16 +51,16 @@ module chipset_top(
 			img_rom_addr <= img_rom_addr + 1;
 		end
 	 end
-	image_rom imgrom(.clk(clk_50MHz),.addr_a(img_rom_addr), .rd_a(rom_data));
+	image_rom imgrom(.clk(clk_50MHz),.r_addr(img_rom_addr), .rd(rom_data));
 	
 	vga_framebuffer_ram imageram(
-		.wdata(rom_data),
-		.read_addr(img_ram_addr), 
-		.write_addr(img_rom_addr),
+		.wd(rom_data),
+		.r_addr(img_ram_addr), 
+		.w_addr(img_rom_addr),
 		.we(1'b1),
-		.read_clock(clk_vga), 
-		.write_clock(misc_clk),
-		.rdata(gray_signal));
+		.r_clk(clk_vga), 
+		.w_clk(misc_clk),
+		.rd(gray_signal));
 
 	assign rgb_w = {gray_signal, gray_signal, gray_signal};
     
