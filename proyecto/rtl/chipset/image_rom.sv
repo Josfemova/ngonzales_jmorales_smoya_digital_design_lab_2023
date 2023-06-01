@@ -1,7 +1,7 @@
 module image_rom
-#(parameter WIDTH = 8, LENGTH = 256**2)
+#(parameter WIDTH = 8, LENGTH = (256*256))
 (
-	input [(WIDTH-1):0] addr_a,
+	input [31:0] addr_a,
 	input clk, 
 	output reg [(WIDTH-1):0] rd_a
 );

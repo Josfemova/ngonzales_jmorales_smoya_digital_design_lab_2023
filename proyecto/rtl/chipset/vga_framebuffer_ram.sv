@@ -2,7 +2,7 @@
 module vga_framebuffer_ram #(parameter DATA_WIDTH=8, parameter LENGTH=256*256)
 (
 	input [(DATA_WIDTH-1):0] wdata,
-	input [(DATA_WIDTH-1):0] read_addr, write_addr,
+	input [31:0] read_addr, write_addr,
 	input we, read_clock, write_clock,
 	output reg [(DATA_WIDTH-1):0] rdata
 );

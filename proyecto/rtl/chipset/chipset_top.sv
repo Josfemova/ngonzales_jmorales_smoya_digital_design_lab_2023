@@ -21,7 +21,7 @@ module chipset_top(
 	reg [11:0] game_state[3:0][3:0];
 	wire misc_clk, clk_vga,ssa, locked;
 	 
-	 clock_div #(.DIV(25000000)) divider(.clk_in(clk_vga), .clk_out(misc_clk));
+	 clock_div #(.DIV(25000)) divider(.clk_in(clk_vga), .clk_out(misc_clk));
 	 clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_vga));
 	 assign p_tick = clk_vga;
 	 
@@ -37,13 +37,32 @@ module chipset_top(
 			.sync(sync), 
 			.blank(blank));
 	
-	wire [31:0] img_rom_addr;
+	reg [31:0] img_rom_addr;
+	wire [31:0] img_ram_addr;
+	wire [7:0] rom_data;
 	wire [7:0] gray_signal;
 	
-	assign img_rom_addr = ((next_x < 256) && (next_y <256))? ((next_y*256)+next_x) : 32'h0;
-	image_rom imgrom(.clk(clk_vga),.addr_a(img_rom_addr), .rd_a(gray_signal));
+	assign img_ram_addr = ((next_x < 256) && (next_y <256))? ((next_y*256)+next_x) : 32'h0;
+	always @(posedge misc_clk or posedge reset) begin
+		if(reset) img_rom_addr <=0;
+		else if (img_rom_addr > (256*256)) begin
+			img_rom_addr <= 0;
+		end else begin
+			img_rom_addr <= img_rom_addr + 1;
+		end
+	 end
+	image_rom imgrom(.clk(clk_50MHz),.addr_a(img_rom_addr), .rd_a(rom_data));
 	
-	assign rgb_w = gray_signal;
+	vga_framebuffer_ram imageram(
+		.wdata(rom_data),
+		.read_addr(img_ram_addr), 
+		.write_addr(img_rom_addr),
+		.we(1'b1),
+		.read_clock(clk_vga), 
+		.write_clock(misc_clk),
+		.rdata(gray_signal));
+
+	assign rgb_w = {gray_signal, gray_signal, gray_signal};
     
     always @(posedge clk_vga or posedge reset) begin
 		if (reset) begin
@@ -54,6 +73,7 @@ module chipset_top(
 			current_y <= next_y;
 		end
 	 end
+	
 	 
     assign rgb = (video_on) ? rgb_w : 24'b0;   // while in display area RGB color = sw, else all OFF
         
