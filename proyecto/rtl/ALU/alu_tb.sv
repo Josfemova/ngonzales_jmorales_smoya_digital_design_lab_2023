@@ -14,8 +14,6 @@ alu #(.WIDTH(W)) DUT(
 	.A(A),
 	.B(B),
 	.ALUControl(UC),
-	.reset(reset),
-	.clk(clk),
 	.ALUFlags(Flags),
 	.Result(Q)
 );

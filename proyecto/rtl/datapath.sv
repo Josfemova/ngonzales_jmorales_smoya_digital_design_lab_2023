@@ -3,7 +3,7 @@ module datapath(input logic clk, reset,
 						input logic RegWrite,
 						input logic [1:0] ImmSrc,
 						input logic ALUSrc,
-						input logic [1:0] ALUControl,
+						input logic [2:0] ALUControl,
 						input logic MemtoReg,
 						input logic PCSrc,
 						output logic [3:0] ALUFlags,
@@ -32,6 +32,6 @@ mux2 #(32) resmux(ALUResult, ReadData, MemtoReg, Result);
 extend ext(Instr[23:0], ImmSrc, ExtImm);
 // ALU logic
 mux2 #(32) srcbmux(WriteData, ExtImm, ALUSrc, SrcB);
-alu alu(SrcA, SrcB, ALUControl, ALUResult, ALUFlags);
+alu #(32) alu(.A(SrcA), .B(SrcB), .ALUControl(ALUControl), .Result(ALUResult), .ALUFlags(ALUFlags));
 
 endmodule

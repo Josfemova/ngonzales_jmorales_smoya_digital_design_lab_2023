@@ -1,8 +1,6 @@
 module alu #(parameter WIDTH=8)(
     input signed [WIDTH-1:0] A,B,
     input [2:0] ALUControl,
-	 input logic reset,
-	 input logic clk,
     output [3:0] ALUFlags,
     output [WIDTH-1:0] Result
 );
