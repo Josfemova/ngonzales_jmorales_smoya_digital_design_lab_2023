@@ -4,10 +4,10 @@ module chipset_4regions
     input clk, we, 
     input [31:0] addr, wd,
     input [31:0] rd1, rd2, rd3, rd4, 
-    output we1, we2, we3, we4,
-    output [31:0] addr1, addr2, addr3, addr4,
-    output [31:0] wd1, wd2, wd3, wd4,
-    output [31:0] rd
+    output logic we1, we2, we3, we4,
+    output logic [31:0] addr1, addr2, addr3, addr4,
+    output logic [31:0] wd1, wd2, wd3, wd4,
+    output logic [31:0] rd
 );
 always @(posedge clk) begin 
     if(addr >= REGION1_BASE && addr < REGION2_BASE) begin 
@@ -23,7 +23,7 @@ always @(posedge clk) begin
         wd2 = 1'b0;
         wd3 = 1'b0;
         wd4 = 1'b0;
-        rd = rd1
+        rd = rd1;
     end 
     else 
     if(addr >= REGION2_BASE && addr < REGION2_BASE) begin 
@@ -39,7 +39,7 @@ always @(posedge clk) begin
         wd2 = wd;
         wd3 = 1'b0;
         wd4 = 1'b0;
-        rd = rd2
+        rd = rd2;
     end 
     else 
     if(addr >= REGION3_BASE && addr < REGION4_BASE) begin 
@@ -55,7 +55,7 @@ always @(posedge clk) begin
         wd2 = 1'b0;
         wd3 = wd;
         wd4 = 1'b0;
-        rd = rd3
+        rd = rd3;
     end 
     else 
     if(addr >= REGION4_BASE) begin 
@@ -71,7 +71,7 @@ always @(posedge clk) begin
         wd2 = 1'b0;
         wd3 = 1'b0;
         wd4 = wd;
-        rd = rd4
+        rd = rd4;
     end 
 end
 

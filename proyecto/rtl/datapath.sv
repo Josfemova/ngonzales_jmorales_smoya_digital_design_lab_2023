@@ -7,20 +7,21 @@ module datapath(input logic clk, reset,
 						input logic MemtoReg,
 						input logic PCSrc,
 						output logic [3:0] ALUFlags,
-						output logic [31:0] PC,
+						// en vez de sacar el PC actual usamos el siguiente
+						output logic [31:0] PCNext,
 						input logic [31:0] Instr,
 						output logic [31:0] ALUResult, WriteData,
 						input logic [31:0] ReadData);
 
-logic [31:0] PCNext, PCPlus4, PCPlus8;
+logic [31:0] PC, PCPlus4, PCPlus8;
 logic [31:0] ExtImm, SrcA, SrcB, Result;
 logic [3:0] RA1, RA2;
 
 // next PC logic
-mux2 #(32) pcmux(PCPlus4, Result, PCSrc, PCNext);
 flopr #(32) pcreg(clk, reset, PCNext, PC);
 adder #(32) pcadd1(PC, 32'b100, PCPlus4);
 adder #(32) pcadd2(PCPlus4, 32'b100, PCPlus8);
+mux2 #(32) pcmux(.d0(PCPlus4), .d1(Result), .s(PCSrc), .y(PCNext));
 
 // register file logic
 mux2 #(4) ra1mux(Instr[19:16], 4'b1111, RegSrc[0], RA1);

@@ -106,6 +106,12 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name EDA_TEST_BENCH_NAME top_testbench -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id top_testbench
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME top_testbench -section_id top_testbench
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/vga_framebuffer_ram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/chipset_4regions.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/chipset_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/data_table_ram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/image_rom.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/instr_rom.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ALU/mux_alu.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ALU/zero_detect_param.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ALU/sumador_tb.sv
@@ -138,14 +144,12 @@ set_global_assignment -name SYSTEMVERILOG_FILE arm.sv
 set_global_assignment -name SYSTEMVERILOG_FILE datapath.sv
 set_global_assignment -name SYSTEMVERILOG_FILE flopr.sv
 set_global_assignment -name SYSTEMVERILOG_FILE adder.sv
-set_global_assignment -name SYSTEMVERILOG_FILE top.sv
 set_global_assignment -name SYSTEMVERILOG_FILE dmem.sv
 set_global_assignment -name SYSTEMVERILOG_FILE imem.sv
 set_global_assignment -name SYSTEMVERILOG_FILE mux2.sv
 set_global_assignment -name HEX_FILE memfile.hex
 set_global_assignment -name SYSTEMVERILOG_FILE arm_tb.sv
 set_global_assignment -name SYSTEMVERILOG_FILE decoder_tb.sv
-set_global_assignment -name SYSTEMVERILOG_FILE top_testbench.sv
 set_global_assignment -name EDA_TEST_BENCH_FILE register_file_tb.sv -section_id register_file_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE register_file.sv -section_id register_file_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE extend_tb.sv -section_id extend_tb
@@ -179,4 +183,9 @@ set_global_assignment -name EDA_TEST_BENCH_FILE register_file.sv -section_id top
 set_global_assignment -name EDA_TEST_BENCH_FILE proyecto_final.sv -section_id top_testbench
 set_global_assignment -name EDA_TEST_BENCH_FILE mux2.sv -section_id top_testbench
 set_global_assignment -name EDA_TEST_BENCH_FILE imem.sv -section_id top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/vga_framebuffer_ram.sv -section_id top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/instr_rom.sv -section_id top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/image_rom.sv -section_id top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/data_table_ram.sv -section_id top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/chipset_4regions.sv -section_id top_testbench
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

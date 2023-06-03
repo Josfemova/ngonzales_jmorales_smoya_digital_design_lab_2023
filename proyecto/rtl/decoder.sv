@@ -24,7 +24,7 @@ module decoder(
 				// B
 		2'b10: controls = 10'b0110100010;
 				// Unimplemented
-		default: controls = 10'bx;
+		default: controls = 10'b0;
 	endcase
 	end
 	assign {RegSrc, ImmSrc, ALUSrc, MemtoReg, RegW, MemW, Branch, ALUOp} = controls;
