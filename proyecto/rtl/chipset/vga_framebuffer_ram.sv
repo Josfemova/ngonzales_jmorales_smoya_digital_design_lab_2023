@@ -1,9 +1,9 @@
 /*Image Ram module*/
 module vga_framebuffer_ram #(parameter DATA_WIDTH=8, parameter LENGTH=256*256)
 (
+	input we, r_clk, w_clk,
 	input [(DATA_WIDTH-1):0] wd,
 	input [31:0] r_addr, w_addr,
-	input we, r_clk, w_clk,
 	output reg [(DATA_WIDTH-1):0] rd
 );
 
