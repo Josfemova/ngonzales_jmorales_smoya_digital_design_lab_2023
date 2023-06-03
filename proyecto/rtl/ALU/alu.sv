@@ -37,10 +37,11 @@ and_param #(.WIDTH(WIDTH)) andAB(
 assign OptionsB[0] = B;
 assign OptionsB[1] = negB;
 
-mux_param #(.WIDTH(WIDTH), .SEL_WIDTH(1)) sel_neg(
-	.data_in(OptionsB),
-	.sel(ALUControl[0]),
-	.data_out(OutB)
+mux2 #(32) sel_neg(
+	.d0(B),
+	.d1(negB),
+	.s(ALUControl[0]),
+	.y(OutB)
 );
 
 sumador #(.WIDTH(WIDTH)) sum(
@@ -81,8 +82,15 @@ right_shifter #(.WIDTH(WIDTH)) rsr_arithm(
 	.data_out(OutRSRArithm)
 );
 
-mux_param #(.WIDTH(WIDTH),.SEL_WIDTH(3)) op_sel(
-	.data_in('{OutRSRArithm, OutRSR, OutLSR , AorB, AandB, negA, Sum, Sum}),
+mux_alu #(32) op_sel(
+	.op0(Sum), 
+	.op1(Sum), 
+	.op2(AandB), 
+	.op3(AorB), 
+	.op4(A ^ B), 
+	.op5(OutLSR), 
+	.op6(OutRSR), 
+	.op7(OutRSRArithm), 
 	.sel(ALUControl),
 	.data_out(Result)
 );
@@ -94,6 +102,6 @@ zero_detect_param #(.WIDTH(WIDTH)) zd(
 
 assign flag_negative = Result[WIDTH-1];
 
-assign ALUFlags = {flag_overflow, flag_carry, flag_negative, flag_zero};
+assign ALUFlags = {flag_negative, flag_zero, flag_carry,flag_overflow};
  
 endmodule

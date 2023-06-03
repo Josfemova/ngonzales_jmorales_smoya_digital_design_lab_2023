@@ -2,7 +2,7 @@ module extend(input logic [23:0] Instr,
 input logic [1:0] ImmSrc,
 output logic [31:0] ExtImm);
 
-always_comb
+always @(*)
 	case(ImmSrc)
 		// 8-bit unsigned immediate
 		2'b00: ExtImm = {24'b0, Instr[7:0]};

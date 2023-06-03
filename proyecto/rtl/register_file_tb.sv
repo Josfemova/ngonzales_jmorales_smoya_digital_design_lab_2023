@@ -8,7 +8,7 @@ module register_file_tb;
 	logic clk = 0;
 	always #5 clk = ~clk;
 
-	register_file dut (
+	regfile dut (
 	 .A1(A1),
 	 .A2(A2),
 	 .A3(A3),

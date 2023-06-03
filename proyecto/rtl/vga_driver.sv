@@ -48,9 +48,9 @@ module vga_driver(
 				vsync <= y_before_pulse || y_after_pulse;
 			end
 		end*/
-	 
+	  
 	 and(video_on, x_active, y_active);
 	 and(blank, hsync, vsync);
-	 assign sync = 1'b_0 ;
+	 assign sync = 1'b0 ;
             
 endmodule
