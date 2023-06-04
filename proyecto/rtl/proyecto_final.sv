@@ -13,14 +13,13 @@ module proyecto_final(
 	output blank
 );
 
-clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_25MHz));
-assign clk_vga = clk_25MHz;
-
+clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_vga));
 
 //graficos
 
 wire video_on;
-wire [23:0] rgb_w;    
+wire [23:0] rgb_w;
+wire [7:0] gray_val;    
 reg [9:0] current_x = 0;
 reg [9:0] current_y = 0;
 reg [9:0] next_x, next_y;
@@ -35,14 +34,17 @@ vga_driver vga_inst(
 		.y(next_y), 
 		.sync(sync), 
 		.blank(blank));
+		
+proyecto_cpu_top cpu_top(
+	.clk(clk_50MHz),
+	.clk_vga(clk_vga),
+	.reset(reset), 
+	.vga_pixel_addr(next_y * 256 + next_x),
+	.vga_pixel_val(gray_val)
+);
+
+assign rgb_w = {gray_val, gray_val, gray_val};
  
- /*screen_drawer sd(
-	 .x(current_x),
-	 .y(current_y),
-	 .draw_state(draw_state),
-	 .rgb_color(rgb_w)
- );*/
-assign rgb_color = 24'hff00ff;
 always @(posedge clk_25MHz or posedge reset) begin
 	if (reset) begin
 		current_x <= 0;

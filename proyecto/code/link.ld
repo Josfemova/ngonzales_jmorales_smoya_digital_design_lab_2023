@@ -4,14 +4,14 @@ ENTRY(_start)
 MEMORY
 {
     /* Programa */
-    INSTR_MEM (rx) : ORIGIN = 0x00000, LENGTH = 4K
+    INSTR_MEM (rx) : ORIGIN = 0x00000, LENGTH = 64K
     /* Imagen cargada */
-    ROM (r) : ORIGIN = 0x80000, LENGTH = 1K
+    IMAGE_ROM (r) : ORIGIN = 0x10000, LENGTH = 64K
     /* Region para tablas de frecuencia acumulada */
     /* 10*256 bytes para armar la tabla del ecualizador*/
-    DATA_TABLE (rw) : ORIGIN = ORIGIN(ROM) + LENGTH(ROM), LENGTH = 1K
+    DATA_TABLE (rw) : ORIGIN = 0x20000, LENGTH = 64K
     /* Imagen que se muestra por VGA */
-    IMAGE_RES (rw) : ORIGIN = ORIGIN(DATA_TABLE) + LENGTH(DATA_TABLE), LENGTH = 1K
+    IMAGE_VGA (rw) : ORIGIN = 0x30000, LENGTH = 64K
 }
 
 SECTIONS
@@ -22,9 +22,9 @@ SECTIONS
   } > INSTR_MEM
 }
 
-PROVIDE(__image_r_start = ORIGIN(ROM));
-PROVIDE(__image_r_end = ORIGIN(ROM) + LENGTH(ROM));
+PROVIDE(__image_r_start = ORIGIN(IMAGE_ROM));
+PROVIDE(__image_r_end = ORIGIN(IMAGE_ROM) + LENGTH(IMAGE_ROM));
 PROVIDE(__data_table_start = ORIGIN(DATA_TABLE));
 PROVIDE(__data_table_end = ORIGIN(DATA_TABLE) + LENGTH(DATA_TABLE));
-PROVIDE(__image_w_start = ORIGIN(IMAGE_RES));
-PROVIDE(__image_w_end = ORIGIN(IMAGE_RES) + LENGTH(IMAGE_RES));
+PROVIDE(__image_w_start = ORIGIN(IMAGE_VGA));
+PROVIDE(__image_w_end = ORIGIN(IMAGE_VGA) + LENGTH(IMAGE_VGA));

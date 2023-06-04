@@ -30,7 +30,7 @@ module decoder(
 	assign {RegSrc, ImmSrc, ALUSrc, MemtoReg, RegW, MemW, Branch, ALUOp} = controls;
 	// ALU Decoder
 	always @(*) begin
-		NoWrite = 0;
+		NoWrite = 1'b0;
 		if (ALUOp) begin // which DP Instr?
 			case(Funct[4:1])
 				4'b0100: ALUControl = 3'b000; // ADD

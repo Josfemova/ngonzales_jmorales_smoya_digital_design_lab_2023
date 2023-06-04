@@ -19,7 +19,7 @@ module condlogic(input logic clk, reset,
 	// write controls are conditional
 	condcheck cc(Cond, Flags, CondEx);
 	assign FlagWrite = FlagW & {2{CondEx}};
-	assign RegWrite = RegW & CondEx & ~NoWrite;
+	assign RegWrite = RegW & CondEx & (~NoWrite);
 	assign MemWrite = MemW & CondEx;
 	assign PCSrc = PCS & CondEx;
 endmodule

@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module top_testbench();
+module arm_top_testbench();
 logic clk;
 logic reset;
 logic [31:0] WriteData, DataAdr;
@@ -9,7 +9,7 @@ arm_top dut(clk, reset, WriteData, DataAdr, MemWrite);
 // initialize test
 initial
 begin
-reset <= 1; #22; reset <= 0;
+reset <= 1; #20; reset <= 0;
 end
 // generate clock to sequence tests
 always
