@@ -24,6 +24,11 @@ reg [9:0] current_x = 0;
 reg [9:0] current_y = 0;
 reg [9:0] next_x, next_y;
 
+
+wire [31:0] img_ram_addr;
+assign img_ram_addr = ((next_x < 256) && (next_y <256))? ((next_y*256)+next_x) : 32'h0;
+
+
 vga_driver vga_inst(
 		.clk(clk_25MHz), 
 		.reset(reset), 
