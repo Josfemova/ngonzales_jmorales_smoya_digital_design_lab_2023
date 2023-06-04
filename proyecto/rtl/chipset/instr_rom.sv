@@ -10,7 +10,7 @@ module instr_rom
 	initial begin
 		//$readmemh("/home/josfemova/REPOSITORIOS/ngonzales_jmorales_smoya_digital_design_lab_2023/proyecto/rtl/memfile.dat",rom, 0, 22);
 		//$readmemh("../../code/build/program_le.txt", rom);
-		$readmemh("/home/josfemova/REPOSITORIOS/ngonzales_jmorales_smoya_digital_design_lab_2023/proyecto/code/build/program_le.txt",rom, 0, 13);
+		$readmemh("/home/josfemova/REPOSITORIOS/ngonzales_jmorales_smoya_digital_design_lab_2023/proyecto/code/build/program_le.txt",rom);
 	end
 
 	always @(posedge clk_a)

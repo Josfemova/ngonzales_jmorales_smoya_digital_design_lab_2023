@@ -1,6 +1,9 @@
 module proyecto_cpu_top(
     input clk_vga, clk, reset,
     input [31:0] vga_pixel_addr,
+    input [31:0] ctrl_val_1,
+    input [31:0] ctrl_val_2,
+    input [31:0] ctrl_val_3,
     output [7:0] vga_pixel_val
 );
 
@@ -37,6 +40,7 @@ chipset_4regions chipsetx(
     .addr(data_addr),
     .wd(wdata),
     .rd1(rd1), .rd2(rd2), .rd3(rd3), .rd4(rd4),
+    .ctrl_val_1(ctrl_val_1), .ctrl_val_2(ctrl_val_2), .ctrl_val_3(ctrl_val_3),
     .we1(we1), .we2(we2), .we3(we3), .we4(we4),
     .addr1(addr1), .addr2(addr2), .addr3(addr3), .addr4(addr4), 
     .wd1(wd1), .wd2(wd2), .wd3(wd3), .wd4(wd4),

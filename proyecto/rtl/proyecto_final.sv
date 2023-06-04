@@ -1,7 +1,9 @@
 module proyecto_final(
 	input clk_50MHz,      
 	input reset,
-	
+	input ctrl_flag_1,
+	input ctrl_flag_2,
+	input ctrl_flag_3,
 	//señales VGA
 	output hsync, 
 	output vsync,
@@ -16,21 +18,32 @@ module proyecto_final(
 clock_div #(.DIV(2)) divider2(.clk_in(clk_50MHz), .clk_out(clk_vga));
 
 //graficos
-
 wire video_on;
 wire [23:0] rgb_w;
 wire [7:0] gray_val;    
 reg [9:0] current_x = 0;
 reg [9:0] current_y = 0;
 reg [9:0] next_x, next_y;
-
+reg [31:0] ctrl_val_1, ctrl_val_2, ctrl_val_3;
 
 wire [31:0] img_ram_addr;
 assign img_ram_addr = ((next_x < 256) && (next_y <256))? ((next_y*256)+next_x) : 32'h0;
 
+always @(posedge clk_50MHz, posedge reset) begin 
+	if(reset) begin
+		ctrl_val_1 <= 0;
+		ctrl_val_2 <= 0;
+		ctrl_val_3 <= 0;
+	end 
+	else begin 
+		if(~ctrl_flag_1) ctrl_val_1 <= 32'b1;
+		if(~ctrl_flag_2) ctrl_val_2 <= 32'b1;
+		if(~ctrl_flag_3) ctrl_val_3 <= 32'b1;
+	end 
+end
 
 vga_driver vga_inst(
-		.clk(clk_25MHz), 
+		.clk(clk_vga), 
 		.reset(reset), 
 		.hsync(hsync), 
 		.vsync(vsync),
@@ -44,13 +57,14 @@ proyecto_cpu_top cpu_top(
 	.clk(clk_50MHz),
 	.clk_vga(clk_vga),
 	.reset(reset), 
-	.vga_pixel_addr(next_y * 256 + next_x),
+    .ctrl_val_1(ctrl_val_1), .ctrl_val_2(ctrl_val_2), .ctrl_val_3(ctrl_val_3),
+	.vga_pixel_addr(img_ram_addr),
 	.vga_pixel_val(gray_val)
 );
 
 assign rgb_w = {gray_val, gray_val, gray_val};
  
-always @(posedge clk_25MHz or posedge reset) begin
+always @(posedge clk_vga or posedge reset) begin
 	if (reset) begin
 		current_x <= 0;
 		current_y <= 0;
