@@ -26,6 +26,15 @@ SECTIONS
 PROVIDE(__image_r_start = ORIGIN(IMAGE_ROM));
 PROVIDE(__image_r_end = ORIGIN(IMAGE_ROM) + LENGTH(IMAGE_ROM));
 PROVIDE(__data_table_start = ORIGIN(DATA_TABLE));
+PROVIDE(__data_table_fi_end = ORIGIN(DATA_TABLE+4*256));
+PROVIDE(__data_table_cuq_start = ORIGIN(__data_table_fi_end + 4));
+PROVIDE(__data_table_cuq_end = ORIGIN(__data_table_cuq_start + 4 *256));
+PROVIDE(__data_table_feq_start = ORIGIN(__data_table_cuq_end + 4));
+PROVIDE(__data_table_feq_end = ORIGIN(__data_table_feq_start + 4 *256));
+PROVIDE(__data_table_cufeq_start = ORIGIN(__data_table_feq_end + 4));
+PROVIDE(__data_table_cufeq_end = ORIGIN(__data_table_cufeq_start + 4 *256));
+PROVIDE(__data_table_I_prime_start = ORIGIN(__data_table_cufeq_end + 4));
+PROVIDE(__data_table_I_prime_end = ORIGIN(__data_table_I_prime_start + 4 *256));
 PROVIDE(__data_table_end = ORIGIN(DATA_TABLE) + LENGTH(DATA_TABLE));
 PROVIDE(__image_w_start = ORIGIN(IMAGE_VGA));
 PROVIDE(__image_w_end = ORIGIN(IMAGE_VGA) + LENGTH(IMAGE_VGA));
