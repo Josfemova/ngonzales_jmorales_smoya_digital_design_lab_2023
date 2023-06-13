@@ -1,5 +1,5 @@
 module instr_rom
-#(parameter WIDTH = 32, LENGTH = 1024)
+#(parameter WIDTH = 32, LENGTH = 256)
 (
 	input clk_a, clk_b, 
 	input [(WIDTH-1):0] r_addr_a, r_addr_b,
