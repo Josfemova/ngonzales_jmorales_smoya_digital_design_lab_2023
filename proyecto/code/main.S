@@ -133,20 +133,39 @@ _start:
     ldr r0, =__data_table_cuq_start // Tabla de Cuf
     ldr r1, =__data_table_cuq_end // Tabla de Cuf
     ldr r2, =__data_table_I_prime_start // Tabla I prima 
-    ldr r9, =__data_table_cufeq_end
+    ldr r11, =__data_table_cufeq_end
     loop_calc_iprima:
         ldr r3, =zero
-        ldr r3, [r3] //llevar cuenta del pixel que se está calculando
-        ldr r4, =__data_table_cufeq_start //puntero cufeq
-        ldr r5, [r0] //cargar valor de  a comparar
+        ldr r3, [r3] // i_prima
+        ldr r4, [r3] // i_prima_prev
+        ldr r5, [r3] // diff_actual
+        ldr r6, [r0] // diff_prev, inicialment valor de cuf[i]
+        ldr r7, =__data_table_cufeq_start //puntero cufeq
+        ldr r8, [r0] //cargar valor de cuf a comparar
+        
         loop_encontrar_cufeq:
-            ldr r6, [r4] //cargar valor de cufeq
-            cmp r6, r5 
-            bpl guardar_iprima// cufeq[i] >= cuf 
-            add r3, r3, #1 // aumentar índice
-            add r4, r4, #4 // mover puntero de cufeq
-            cmp r4, r9 // ver si no se llegó al final de cufeq
-            bne loop_encontrar_cufeq
+            ldr r9, [r7] //cargar valor de cufeq
+            cmp r9, r8 //cufeq >= cuf
+            bhs diff_case2
+            diff_case1:
+                sub r5, r8, r9
+                b diff_end
+            diff_case2:
+                sub r5, r9, r8
+            diff_end:
+            cmp r5, r6 // diff_actual > diff_prev
+            bhs guardar_iprima_prev
+            add r6, r5, #0 // diff_prev = diff_actual
+            add r4, r3, #0 // i_prima_prev = i_prima
+            add r7, r7, #4 // mover puntero de cufeq
+            cmp r7, r11 // ver si no se llegó al final de cufeq
+            bne aumentar_i_prima
+            b guardar_iprima
+            aumentar_i_prima:
+                add r3, r3, #1 // i_prima ++
+                b loop_encontrar_cufeq
+        guardar_iprima_prev:
+            add r3, r4, #0 // i_prima=i_prima_prev
         guardar_iprima:
             str r3, [r2]
         add r0, r0, #4 //mover puntero cuf 1 pixel

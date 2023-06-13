@@ -40,12 +40,23 @@ def ecualizar(imagen):
     for i in range(1,256): #Se calcula la frecuencia acumulada de la normalización
         cuf_norm[i] = cuf_norm[i-1]+norm[i]
     for i in range(256): #Hace la nueva I, según los valores de frecuencia acumulada y cuf_norm, es decir si I = 6 -----> cuf= 5, el valor más cercano a cuf en cuf_norm es 7 y eso pasa en I=8
-        i_prima =0           # entonces donde antes era I=6, ahora es I=8. Si no se entiende ver espe xd
+        i_prima = 0           # entonces donde antes era I=6, ahora es I=8. Si no se entiende ver espe xd
+        i_prima_prev = 0
+        diff_prev = cuf[i] # diferencia inicial
+        diff_actual = 0 
         for j in range(256):
-            if(cuf_norm[j]>=cuf[i]):
-                break
+            i_prima = j
+            cufeq = cuf_norm[j]
+            if(cufeq >= cuf[i]):
+                diff_actual = cufeq - cuf[i] 
             else:
-                i_prima = j
+                diff_actual = cuf[i] - cufeq 
+            if(diff_actual > diff_prev):
+                i_prima = i_prima_prev
+                break;
+            else:
+                diff_prev = diff_actual
+                i_prima_prev = i_prima
         histograma[i]=i_prima #Define el nuevo valor de I  antes era 5 -----> 2
     nueva=np.zeros(pixel,dtype=np.uint8) #se crea la matriz con los valores nuevos
     for i in range(pixel): # Aqui se sustituyen todos los valores de la imagen original, por los obtenidos en el histograma, por ejemplo todos los pixeles de valor 8 pasan a ser 3

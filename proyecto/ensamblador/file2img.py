@@ -9,4 +9,4 @@ def file2img():
             array[i,j]=int(file[cont],2)
             cont +=1
     cv2.imwrite("prueba2.png", array)
-    
+file2img()
