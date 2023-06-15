@@ -1,0 +1,243 @@
+# -------------------------------------------------------------------------- #
+#
+# Copyright (C) 2022  Intel Corporation. All rights reserved.
+# Your use of Intel Corporation's design tools, logic functions 
+# and other software and tools, and any partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Intel Program License 
+# Subscription Agreement, the Intel Quartus Prime License Agreement,
+# the Intel FPGA IP License Agreement, or other applicable license
+# agreement, including, without limitation, that your use is for
+# the sole purpose of programming logic devices manufactured by
+# Intel and sold by Intel or its authorized distributors.  Please
+# refer to the applicable agreement for further details, at
+# https://fpgasoftware.intel.com/eula.
+#
+# -------------------------------------------------------------------------- #
+#
+# Quartus Prime
+# Version 21.1.1 Build 850 06/23/2022 SJ Lite Edition
+# Date created = 10:23:22  May 16, 2023
+#
+# -------------------------------------------------------------------------- #
+#
+# Notes:
+#
+# 1) The default values for assignments are stored in the file:
+#		proyecto_final_assignment_defaults.qdf
+#    If this file doesn't exist, see file:
+#		assignment_defaults.qdf
+#
+# 2) Intel recommends that you do not modify this file. This
+#    file is updated automatically by the Quartus Prime software
+#    and any changes you make may be lost or overwritten.
+#
+# -------------------------------------------------------------------------- #
+
+
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CSEMA5F31C6
+set_global_assignment -name TOP_LEVEL_ENTITY proyecto_final
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 21.1.1
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "10:23:22  MAY 16, 2023"
+set_global_assignment -name LAST_QUARTUS_VERSION "21.1.1 Lite Edition"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name BOARD "DE1-SoC Board"
+set_global_assignment -name EDA_SIMULATION_TOOL "Questa Intel FPGA (SystemVerilog)"
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "SYSTEMVERILOG HDL" -section_id eda_simulation
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_timing
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_symbol
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_signal_integrity
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_board_design_boundary_scan
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_location_assignment PIN_AF14 -to clk_50MHz
+set_location_assignment PIN_B11 -to hsync
+set_location_assignment PIN_B13 -to rgb_b[0]
+set_location_assignment PIN_G13 -to rgb_b[1]
+set_location_assignment PIN_H13 -to rgb_b[2]
+set_location_assignment PIN_F14 -to rgb_b[3]
+set_location_assignment PIN_H14 -to rgb_b[4]
+set_location_assignment PIN_F15 -to rgb_b[5]
+set_location_assignment PIN_G15 -to rgb_b[6]
+set_location_assignment PIN_J14 -to rgb_b[7]
+set_location_assignment PIN_A13 -to rgb_r[0]
+set_location_assignment PIN_C13 -to rgb_r[1]
+set_location_assignment PIN_E13 -to rgb_r[2]
+set_location_assignment PIN_B12 -to rgb_r[3]
+set_location_assignment PIN_C12 -to rgb_r[4]
+set_location_assignment PIN_D12 -to rgb_r[5]
+set_location_assignment PIN_E12 -to rgb_r[6]
+set_location_assignment PIN_F13 -to rgb_r[7]
+set_location_assignment PIN_J9 -to rgb_g[0]
+set_location_assignment PIN_J10 -to rgb_g[1]
+set_location_assignment PIN_H12 -to rgb_g[2]
+set_location_assignment PIN_G10 -to rgb_g[3]
+set_location_assignment PIN_G11 -to rgb_g[4]
+set_location_assignment PIN_G12 -to rgb_g[5]
+set_location_assignment PIN_F11 -to rgb_g[6]
+set_location_assignment PIN_E11 -to rgb_g[7]
+set_location_assignment PIN_D11 -to vsync
+set_location_assignment PIN_AB12 -to reset
+set_location_assignment PIN_A11 -to clk_vga
+
+set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH proyecto_tb -section_id eda_simulation
+set_global_assignment -name EDA_TEST_BENCH_NAME register_file_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id register_file_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME register_file_tb -section_id register_file_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME extend_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id extend_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME extend_tb -section_id extend_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME arm_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id arm_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME arm_tb -section_id arm_tb
+set_global_assignment -name EDA_TEST_BENCH_NAME decoder_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id decoder_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME decoder_tb -section_id decoder_tb
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name EDA_TEST_BENCH_NAME arm_top_testbench -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME arm_top_testbench -section_id arm_top_testbench
+set_global_assignment -name SYSTEMVERILOG_FILE proyecto_cpu_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE arm_top_testbench.sv
+set_global_assignment -name SYSTEMVERILOG_FILE arm_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/vga_framebuffer_ram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/chipset_4regions.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/chipset_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/data_table_ram.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/image_rom.sv
+set_global_assignment -name SYSTEMVERILOG_FILE chipset/instr_rom.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/mux_alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/zero_detect_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/sumador_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/sumador.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/right_shifter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/or_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/neg_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/mux_param_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/left_shifter_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/left_shifter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/and_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/alu_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ALU/mux_param.sv
+set_global_assignment -name SYSTEMVERILOG_FILE clock_div.sv
+set_global_assignment -name SYSTEMVERILOG_FILE clock_div_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE comparator.sv
+set_global_assignment -name SYSTEMVERILOG_FILE counter.sv
+set_global_assignment -name SYSTEMVERILOG_FILE vga_driver.sv
+set_global_assignment -name SYSTEMVERILOG_FILE proyecto_final.sv
+set_global_assignment -name SYSTEMVERILOG_FILE register_file.sv
+set_global_assignment -name SYSTEMVERILOG_FILE register_file_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE extend.sv
+set_global_assignment -name SYSTEMVERILOG_FILE extend_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE controller.sv
+set_global_assignment -name SYSTEMVERILOG_FILE decoder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE condlogic.sv
+set_global_assignment -name SYSTEMVERILOG_FILE flopenr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE arm.sv
+set_global_assignment -name SYSTEMVERILOG_FILE datapath.sv
+set_global_assignment -name SYSTEMVERILOG_FILE flopr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE adder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE dmem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE imem.sv
+set_global_assignment -name SYSTEMVERILOG_FILE mux2.sv
+set_global_assignment -name HEX_FILE memfile.hex
+set_global_assignment -name SYSTEMVERILOG_FILE arm_tb.sv
+set_global_assignment -name SYSTEMVERILOG_FILE decoder_tb.sv
+set_global_assignment -name EDA_TEST_BENCH_NAME proyecto_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME proyecto_cpu_top_tb -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE register_file_tb.sv -section_id register_file_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE register_file.sv -section_id register_file_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE extend_tb.sv -section_id extend_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE extend.sv -section_id extend_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE arm_tb.sv -section_id arm_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE arm.sv -section_id arm_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE decoder.sv -section_id decoder_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE decoder_tb.sv -section_id decoder_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE flopr.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE flopenr.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE extend_tb.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE extend.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE dmem.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE decoder_tb.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE decoder.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE datapath.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE controller.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE condlogic.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE comparator.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE clock_div_tb.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE clock_div.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE arm_tb.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE arm.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE adder.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE vga_driver.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE register_file_tb.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE register_file.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE proyecto_final.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE mux2.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE imem.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/vga_framebuffer_ram.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/instr_rom.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/image_rom.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/data_table_ram.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/chipset_4regions.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE arm_top_testbench.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE arm_top.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/alu.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/mux_param.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/mux_alu.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/left_shifter_tb.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/left_shifter.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/and_param.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/zero_detect_param.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/sumador.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/right_shifter.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/or_param.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/neg_param.sv -section_id arm_top_testbench
+set_global_assignment -name EDA_TEST_BENCH_FILE vga_driver.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE register_file.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE proyecto_cpu_top.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE mux2.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE flopr.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE flopenr.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE extend.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE decoder.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE counter.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE datapath.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE controller.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE comparator.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE condlogic.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE clock_div.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE arm.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE adder.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/zero_detect_param.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/sumador.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/right_shifter.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/or_param.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/neg_param.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/mux_param.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/mux_alu.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/left_shifter.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/and_param.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE ALU/alu.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/instr_rom.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/image_rom.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/chipset_4regions.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/data_table_ram.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE chipset/vga_framebuffer_ram.sv -section_id proyecto_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE proyecto_cpu_top_tb.sv -section_id proyecto_tb
+set_location_assignment PIN_AA14 -to ctrl_flag_1
+set_location_assignment PIN_AA15 -to ctrl_flag_2
+set_location_assignment PIN_W15 -to ctrl_flag_3
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
